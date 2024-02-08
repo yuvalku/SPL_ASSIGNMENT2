@@ -64,6 +64,10 @@ public class Player implements Runnable {
         this.table = table;
         this.id = id;
         this.human = human;
+
+        // Added
+        terminate = false;
+        score = 0;
     }
 
     /**
@@ -105,7 +109,7 @@ public class Player implements Runnable {
      * Called when the game should be terminated.
      */
     public void terminate() {
-        // TODO implement
+        terminate = true;
     }
 
     /**
