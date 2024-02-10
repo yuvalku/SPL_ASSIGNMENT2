@@ -2,6 +2,7 @@ package bguspl.set.ex;
 
 import bguspl.set.Env;
 
+
 /**
  * This class manages the players' threads and data
  *
@@ -51,7 +52,10 @@ public class Player implements Runnable {
     private int score;
 
     // Added
-    int tokenCounter;
+    private int tokenCounter;
+    private Dealer dealer;
+    actionsQueue<Integer> inActions;
+
 
     /**
      * The class constructor.
@@ -69,9 +73,11 @@ public class Player implements Runnable {
         this.human = human;
 
         // Added
+        this.dealer = dealer;
         terminate = false;
         score = 0;
         tokenCounter = 0;
+        inActions = new actionsQueue<Integer>();
     }
 
     /**
@@ -85,8 +91,19 @@ public class Player implements Runnable {
 
         while (!terminate) {
             // TODO implement main player loop
+
+            int slot = inActions.take();
+
+            if (table.removeToken(id, slot)){
+                tokenCounter--;
+            }
+            else {
+                table.placeToken(id, slot);
+                tokenCounter++;
+            }  
+
             if (tokenCounter == 3){
-                int[] set = table.returnSet(id);
+
             }
 
         }
@@ -127,14 +144,8 @@ public class Player implements Runnable {
      */
     public void keyPressed(int slot) {
         // TODO implement
-        
-        if (table.removeToken(id, slot)){
-            tokenCounter--;
-        }
-        else {
-            table.placeToken(id, slot);
-            tokenCounter++;
-        }
+
+        inActions.put(slot);
 
     }
 
