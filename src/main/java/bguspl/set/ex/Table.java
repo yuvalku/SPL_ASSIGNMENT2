@@ -29,6 +29,9 @@ public class Table {
      */
     protected final Integer[] cardToSlot; // slot per card (if any)
 
+    // Added
+    private boolean[][] tokens;
+
     /**
      * Constructor for testing.
      *
@@ -41,6 +44,12 @@ public class Table {
         this.env = env;
         this.slotToCard = slotToCard;
         this.cardToSlot = cardToSlot;
+
+        // Added
+        tokens = new boolean[env.config.players][env.config.tableSize];
+        for (int i = 0; i < tokens.length; i++)
+            for (int j = 0; j < tokens[i].length; j++)
+                tokens[i][j] = false;
     }
 
     /**
@@ -95,6 +104,7 @@ public class Table {
         slotToCard[slot] = card;
 
         // TODO implement
+        env.ui.placeCard(card, slot);
     }
 
     /**
@@ -107,6 +117,14 @@ public class Table {
         } catch (InterruptedException ignored) {}
 
         // TODO implement
+        int card = slotToCard[slot];
+        cardToSlot[card] = null;
+        slotToCard[slot] = null;
+
+        for (int i = 0; i < env.config.players; i++)
+            removeToken(i, slot);
+
+        env.ui.removeCard(slot);
     }
 
     /**
@@ -116,6 +134,8 @@ public class Table {
      */
     public void placeToken(int player, int slot) {
         // TODO implement
+        tokens[player][slot] = true;
+        env.ui.placeToken(player, slot);
     }
 
     /**
@@ -126,6 +146,11 @@ public class Table {
      */
     public boolean removeToken(int player, int slot) {
         // TODO implement
-        return false;
+        boolean output = tokens[player][slot];
+        if (output){
+            tokens[player][slot] = false;
+            env.ui.removeToken(player, slot);
+        }
+        return output;
     }
 }
