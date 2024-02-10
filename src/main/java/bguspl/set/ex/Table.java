@@ -153,4 +153,16 @@ public class Table {
         }
         return output;
     }
+
+    public int[] returnSet(int player){
+        int j = 0;
+        int[] output = new int[3];
+        for (int i = 0; i < tokens[player].length; i++){
+            if (tokens[player][i]){
+                output[j] = slotToCard[i];
+                j++;
+            }
+        }
+        return output;
+    }
 }

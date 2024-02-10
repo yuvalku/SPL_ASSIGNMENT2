@@ -50,6 +50,9 @@ public class Player implements Runnable {
      */
     private int score;
 
+    // Added
+    int tokenCounter;
+
     /**
      * The class constructor.
      *
@@ -68,6 +71,7 @@ public class Player implements Runnable {
         // Added
         terminate = false;
         score = 0;
+        tokenCounter = 0;
     }
 
     /**
@@ -81,6 +85,10 @@ public class Player implements Runnable {
 
         while (!terminate) {
             // TODO implement main player loop
+            if (tokenCounter == 3){
+                int[] set = table.returnSet(id);
+            }
+
         }
         if (!human) try { aiThread.join(); } catch (InterruptedException ignored) {}
         env.logger.info("thread " + Thread.currentThread().getName() + " terminated.");
@@ -119,6 +127,15 @@ public class Player implements Runnable {
      */
     public void keyPressed(int slot) {
         // TODO implement
+        
+        if (table.removeToken(id, slot)){
+            tokenCounter--;
+        }
+        else {
+            table.placeToken(id, slot);
+            tokenCounter++;
+        }
+
     }
 
     /**
@@ -129,9 +146,14 @@ public class Player implements Runnable {
      */
     public void point() {
         // TODO implement
-
         int ignored = table.countCards(); // this part is just for demonstration in the unit tests
         env.ui.setScore(id, ++score);
+
+        env.ui.setFreeze(id, env.config.pointFreezeMillis);
+        // Which exception should we catch?
+        try {
+            Thread.sleep(env.config.pointFreezeMillis);
+        } catch (InterruptedException e) {}
     }
 
     /**
@@ -139,6 +161,13 @@ public class Player implements Runnable {
      */
     public void penalty() {
         // TODO implement
+
+        env.ui.setFreeze(id, env.config.penaltyFreezeMillis);
+        // Which exception should we catch?
+        try {
+            Thread.sleep(env.config.penaltyFreezeMillis);
+        } catch (InterruptedException e) {}
+
     }
 
     public int score() {
