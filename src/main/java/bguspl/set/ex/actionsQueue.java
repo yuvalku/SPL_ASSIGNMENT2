@@ -8,7 +8,7 @@ class actionsQueue<E> {
 
     public actionsQueue() {
         MAX = 3;
-        actions = new Vector<>();
+        actions = new Vector<>(); 
     }
 
     public synchronized void put(E slot){
@@ -33,5 +33,11 @@ class actionsQueue<E> {
         actions.remove(0);
         this.notifyAll();
         return action;
+    }
+
+    public synchronized void clearQueue(){
+        while(actions.size() != 0){
+            actions.remove(0);
+        }
     }
 }

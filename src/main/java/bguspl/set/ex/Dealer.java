@@ -37,6 +37,9 @@ public class Dealer implements Runnable {
      */
     private long reshuffleTime = Long.MAX_VALUE;
 
+    // Added
+    protected setsQueue setQ;
+
     public Dealer(Env env, Table table, Player[] players) {
         this.env = env;
         this.table = table;
@@ -128,5 +131,10 @@ public class Dealer implements Runnable {
      */
     private void announceWinners() {
         // TODO implement
+    }
+
+    // Added
+    public void pushToTestSet(Pair<Integer,int[]> pair){
+        setQ.put(pair);
     }
 }

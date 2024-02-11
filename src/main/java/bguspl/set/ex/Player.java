@@ -1,5 +1,7 @@
 package bguspl.set.ex;
 
+import java.util.Random;
+
 import bguspl.set.Env;
 
 
@@ -54,7 +56,8 @@ public class Player implements Runnable {
     // Added
     private int tokenCounter;
     private Dealer dealer;
-    actionsQueue<Integer> inActions;
+    private actionsQueue<Integer> inActions;
+    protected boolean answered;
 
 
     /**
@@ -78,6 +81,8 @@ public class Player implements Runnable {
         score = 0;
         tokenCounter = 0;
         inActions = new actionsQueue<Integer>();
+        answered = true;
+
     }
 
     /**
@@ -100,10 +105,20 @@ public class Player implements Runnable {
             else {
                 table.placeToken(id, slot);
                 tokenCounter++;
-            }  
+            }
 
             if (tokenCounter == 3){
-
+                int[] set = table.returnSet(id);
+                Pair<Integer, int[]> pair = new Pair(id, set);
+                synchronized(dealer.setQ){
+                    dealer.pushToTestSet(pair);
+                    answered = false;
+                    while (!answered){
+                        try {
+                            wait();
+                        } catch (InterruptedException e) {}
+                    }
+                }
             }
 
         }
@@ -121,6 +136,11 @@ public class Player implements Runnable {
             env.logger.info("thread " + Thread.currentThread().getName() + " starting.");
             while (!terminate) {
                 // TODO implement player key press simulator
+
+                Random random = new Random();
+                int slot = random.nextInt(12);
+                inActions.put(slot);
+                
                 try {
                     synchronized (this) { wait(); }
                 } catch (InterruptedException ignored) {}
@@ -156,6 +176,8 @@ public class Player implements Runnable {
      * @post - the player's score is updated in the ui.
      */
     public void point() {
+        answered = !answered;
+        
         // TODO implement
         int ignored = table.countCards(); // this part is just for demonstration in the unit tests
         env.ui.setScore(id, ++score);
@@ -171,6 +193,7 @@ public class Player implements Runnable {
      * Penalize a player and perform other related actions.
      */
     public void penalty() {
+        answered = !answered;
         // TODO implement
 
         env.ui.setFreeze(id, env.config.penaltyFreezeMillis);
