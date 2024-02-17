@@ -1,6 +1,7 @@
 package bguspl.set.ex;
 
 import bguspl.set.Env;
+import java.util.Collections;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,12 +40,17 @@ public class Dealer implements Runnable {
 
     // Added
     protected setsQueue setQ;
+    private Thread dealerThread;
+    private boolean wasInterruped;
 
     public Dealer(Env env, Table table, Player[] players) {
         this.env = env;
         this.table = table;
         this.players = players;
         deck = IntStream.range(0, env.config.deckSize).boxed().collect(Collectors.toList());
+
+        //added
+        wasInterruped = false;
     }
 
     /**
@@ -52,11 +58,19 @@ public class Dealer implements Runnable {
      */
     @Override
     public void run() {
+
+        // Added
+        dealerThread = Thread.currentThread();
+
         env.logger.info("thread " + Thread.currentThread().getName() + " starting.");
         while (!shouldFinish()) {
+
+            // Added
+            Collections.shuffle(deck);
+
             placeCardsOnTable();
             timerLoop();
-            updateTimerDisplay(false);
+            updateTimerDisplay(true);
             removeAllCardsFromTable();
         }
         announceWinners();
@@ -96,13 +110,60 @@ public class Dealer implements Runnable {
      */
     private void removeCardsFromTable() {
         // TODO implement
+
+        Triple<Integer, int[], int[]> toCheck = setQ.take();
+        while (toCheck != null){
+
+            // extract data from the triple
+            int playerId = toCheck.getFirst();
+            int[] cards = toCheck.getSecond();
+            int[] slots = toCheck.getThird();
+
+            // check if the cards in the set are still on the table
+            if (table.isSetRelevant(cards, slots)){
+
+                // check if legal set and give penalty or point
+                boolean legalSet = env.util.testSet(cards);
+                players[playerId].toScore(legalSet);
+
+                // remove the cards from the table if the set was legal
+                if (legalSet){
+                    for (int slot = 0; slot < slots.length; slot++){
+                        table.removeCard(slot);
+
+                        // remove all the tokens from the removed cards
+                        for (int i = 0; i < players.length; i++){
+                            players[i].removeToken(slot);
+                        }
+                    }
+                }
+
+                //this is not a legal set, so remove tokens (and update tokens counter)
+                else{ 
+                    for(int i = 0 ; i < slots.length ; i++){
+                        players[playerId].removeToken(slots[i]);
+                    }
+                }
+            }
+
+            // wake player and pop from queue
+            players[playerId].interruptPlayer();
+            toCheck = setQ.take();
+        }
     }
 
     /**
      * Check if any cards can be removed from the deck and placed on the table.
      */
     private void placeCardsOnTable() {
-        // TODO implement
+
+        // For each slot that equals null, remove the first card in the deck and place it on the table
+        for (int i = 0; i < env.config.tableSize; i++){
+            if (table.slotToCard[i] == null){
+                int card = deck.remove(0);
+                table.placeCard(card, i); // NEEDED TO BE SYNCHRONIZED
+            }
+        }
     }
 
     /**
@@ -110,6 +171,12 @@ public class Dealer implements Runnable {
      */
     private void sleepUntilWokenOrTimeout() {
         // TODO implement
+
+        try {
+            Thread.sleep(100); // CHANGE TIME
+        } catch (InterruptedException e) {
+            wasInterruped = true;
+        }
     }
 
     /**
@@ -134,7 +201,8 @@ public class Dealer implements Runnable {
     }
 
     // Added
-    public void pushToTestSet(Pair<Integer,int[]> pair){
-        setQ.put(pair);
+    public void pushToTestSet(Triple<Integer, int[], int[]> triple){
+        setQ.put(triple);
+        dealerThread.interrupt();
     }
 }

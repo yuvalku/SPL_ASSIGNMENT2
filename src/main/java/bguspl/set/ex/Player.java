@@ -57,7 +57,7 @@ public class Player implements Runnable {
     private int tokenCounter;
     private Dealer dealer;
     private actionsQueue<Integer> inActions;
-    protected boolean answered;
+    private boolean toScore;
 
 
     /**
@@ -81,7 +81,7 @@ public class Player implements Runnable {
         score = 0;
         tokenCounter = 0;
         inActions = new actionsQueue<Integer>();
-        answered = true;
+        toScore = false;
 
     }
 
@@ -99,6 +99,7 @@ public class Player implements Runnable {
 
             int slot = inActions.take();
 
+            // place or remove token
             if (table.removeToken(id, slot)){
                 tokenCounter--;
             }
@@ -108,17 +109,28 @@ public class Player implements Runnable {
             }
 
             if (tokenCounter == 3){
-                int[] set = table.returnSet(id);
-                Pair<Integer, int[]> pair = new Pair(id, set);
-                synchronized(dealer.setQ){
-                    dealer.pushToTestSet(pair);
-                    answered = false;
-                    while (!answered){
-                        try {
-                            wait();
-                        } catch (InterruptedException e) {}
-                    }
+
+                // extract the set and create triple for the dealer
+                int[][] set = table.returnSet(id);
+                int[] setCards = set[0];
+                int[] setSlots = set[1];
+                Triple<Integer, int[], int[]> triple = new Triple(id, setCards, setSlots);
+                dealer.pushToTestSet(triple);
+
+                // wait until dealer responds
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    // TODO: handle exception
                 }
+
+                // point or penalty and clear queue
+                if (toScore)
+                    point();
+                else
+                    penalty();
+                inActions.clearQueue();
+
             }
 
         }
@@ -141,9 +153,9 @@ public class Player implements Runnable {
                 int slot = random.nextInt(12);
                 inActions.put(slot);
                 
-                try {
-                    synchronized (this) { wait(); }
-                } catch (InterruptedException ignored) {}
+                // try {
+                //     synchronized (this) { wait(); }
+                // } catch (InterruptedException ignored) {}
             }
             env.logger.info("thread " + Thread.currentThread().getName() + " terminated.");
         }, "computer-" + id);
@@ -175,9 +187,7 @@ public class Player implements Runnable {
      * @post - the player's score is increased by 1.
      * @post - the player's score is updated in the ui.
      */
-    public void point() {
-        answered = !answered;
-        
+    public void point() { 
         // TODO implement
         int ignored = table.countCards(); // this part is just for demonstration in the unit tests
         env.ui.setScore(id, ++score);
@@ -193,7 +203,6 @@ public class Player implements Runnable {
      * Penalize a player and perform other related actions.
      */
     public void penalty() {
-        answered = !answered;
         // TODO implement
 
         env.ui.setFreeze(id, env.config.penaltyFreezeMillis);
@@ -206,5 +215,20 @@ public class Player implements Runnable {
 
     public int score() {
         return score;
+    }
+    
+    //Added
+    public void toScore(boolean toscore) {
+        toScore = toscore;
+        // To interrupt player?
+    }
+
+    public void removeToken(int slot){
+        if (table.removeToken(id, slot))
+            tokenCounter--;
+    }
+
+    public void interruptPlayer(){
+        playerThread.interrupt();
     }
 }

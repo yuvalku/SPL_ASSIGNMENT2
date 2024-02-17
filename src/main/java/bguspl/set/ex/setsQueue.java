@@ -3,26 +3,23 @@ import java.util.Vector;
 
 class setsQueue {
 
-    private Vector<Pair<Integer, int[]>> sets;
+    private Vector<Triple<Integer, int[], int[]>> sets;
 
     public setsQueue() {
         sets = new Vector<>();
     }
 
-    public synchronized void put(Pair<Integer, int[]> set){
+    public synchronized void put(Triple<Integer, int[], int[]> set){
 
         sets.add(set);
-        this.notifyAll();
     }
 
-    public synchronized Pair<Integer, int[]> take() {
-        while(sets.size() == 0){
-            try{
-                this.wait();
-            } catch (InterruptedException ignored){}
+    public synchronized Triple<Integer, int[], int[]> take() {
+        if (sets.size() == 0){
+            return null;
         }
 
-        Pair<Integer, int[]> set = sets.get(0);
+        Triple<Integer, int[], int[]> set = sets.get(0);
         sets.remove(0);
         return set;
     }

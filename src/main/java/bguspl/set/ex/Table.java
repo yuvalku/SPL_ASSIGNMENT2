@@ -120,10 +120,6 @@ public class Table {
         int card = slotToCard[slot];
         cardToSlot[card] = null;
         slotToCard[slot] = null;
-
-        for (int i = 0; i < env.config.players; i++)
-            removeToken(i, slot);
-
         env.ui.removeCard(slot);
     }
 
@@ -154,15 +150,22 @@ public class Table {
         return output;
     }
 
-    public int[] returnSet(int player){
+    //this method returns a 2-D array which the first array is the cards, and the second one is the slots each card
+    //is the corresponding slot, for a specific player.
+    public int[][] returnSet(int player){
         int j = 0;
-        int[] output = new int[3];
+        int[][] output = new int[2][3];
         for (int i = 0; i < tokens[player].length; i++){
             if (tokens[player][i]){
-                output[j] = slotToCard[i];
+                output[0][j] = slotToCard[i];
+                output[1][j] = i;
                 j++;
             }
         }
         return output;
+    }
+
+    public boolean isSetRelevant(int[] cards, int[] slots){
+        return (cards[0] == slotToCard[slots[0]] && cards[1] == slotToCard[slots[1]] && cards[2] == slotToCard[slots[2]]);
     }
 }
