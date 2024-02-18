@@ -41,7 +41,7 @@ public class Dealer implements Runnable {
     // Added
     protected setsQueue setQ;
     private Thread dealerThread;
-    private boolean wasInterruped;
+    private Thread[] playersThreads;
 
     public Dealer(Env env, Table table, Player[] players) {
         this.env = env;
@@ -50,7 +50,8 @@ public class Dealer implements Runnable {
         deck = IntStream.range(0, env.config.deckSize).boxed().collect(Collectors.toList());
 
         //added
-        wasInterruped = false;
+        terminate = false;
+        playersThreads = new Thread[players.length];
     }
 
     /**
@@ -63,6 +64,15 @@ public class Dealer implements Runnable {
         dealerThread = Thread.currentThread();
 
         env.logger.info("thread " + Thread.currentThread().getName() + " starting.");
+
+        // create and run the player threads
+        for (int i = 0; i < players.length; i++){
+            playersThreads[i] = new Thread(players[i]);
+        }
+        for (int i = 0; i < playersThreads.length; i++){
+            playersThreads[i].start();
+        }
+        
         while (!shouldFinish()) {
 
             // Added
@@ -97,7 +107,7 @@ public class Dealer implements Runnable {
      * Called when the game should be terminated.
      */
     public void terminate() {
-        // TODO implement
+        terminate = true;
     }
 
     /**
@@ -154,7 +164,7 @@ public class Dealer implements Runnable {
             }
 
             // wake player and pop from queue
-            players[playerId].interruptPlayer();
+            playersThreads[playerId].interrupt();
             if (toUpdateTimer) {
                 updateTimerDisplay(true);
                 reshuffleTime = System.currentTimeMillis() + 60000;
@@ -181,10 +191,9 @@ public class Dealer implements Runnable {
      * Sleep for a fixed amount of time or until the thread is awakened for some purpose.
      */
     private void sleepUntilWokenOrTimeout() {
-        // TODO implement
 
         try {
-            Thread.sleep(10); // CHANGE TIME
+            Thread.sleep(10); // CHANGE TIME???
         } catch (InterruptedException e) {}
     }
 
@@ -192,7 +201,6 @@ public class Dealer implements Runnable {
      * Reset and/or update the countdown and the countdown display.
      */
     private void updateTimerDisplay(boolean reset) {
-        // TODO implement
 
         if (reset){
             env.ui.setCountdown(60000, false);
@@ -208,7 +216,6 @@ public class Dealer implements Runnable {
      * Returns all the cards from the table to the deck.
      */
     private void removeAllCardsFromTable() {
-        // TODO implement
 
         table.addToDeck(this);
 
@@ -226,7 +233,29 @@ public class Dealer implements Runnable {
      * Check who is/are the winner/s and displays them.
      */
     private void announceWinners() {
-        // TODO implement
+
+        //check max score and count winners
+        int maxScore = 0;
+        int counter = 0;
+        for (int i = 0; i < players.length; i++){
+            if (players[i].score() > maxScore){ 
+                maxScore = players[i].score();
+                counter = 1;
+            }
+            else if (players[i].score() == maxScore)
+                counter++;
+        }
+
+        //add winner's id's to a new array
+        int[] players_id = new int[counter];
+        int j=0;
+        for (int i = 0; i < players.length; i++){
+            if (players[i].score() == maxScore) 
+            players_id[j] = i;
+        }
+        
+        //announce winners
+        env.ui.announceWinner(players_id);  
     }
 
     // Added

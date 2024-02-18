@@ -133,9 +133,8 @@ public class Player implements Runnable {
                     else
                         penalty();
                     inActions.clearQueue();
-  
+                }
             }
-
         }
         if (!human) try { aiThread.join(); } catch (InterruptedException ignored) {}
         env.logger.info("thread " + Thread.currentThread().getName() + " terminated.");
@@ -247,9 +246,5 @@ public class Player implements Runnable {
     public void removeToken(int slot){
         if (table.removeToken(id, slot))
             tokenCounter--;
-    }
-
-    public void interruptPlayer(){
-        playerThread.interrupt();
     }
 }
