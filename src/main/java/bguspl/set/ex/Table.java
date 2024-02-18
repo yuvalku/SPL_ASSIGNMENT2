@@ -117,10 +117,13 @@ public class Table {
         } catch (InterruptedException ignored) {}
 
         // TODO implement
-        int card = slotToCard[slot];
-        cardToSlot[card] = null;
-        slotToCard[slot] = null;
-        env.ui.removeCard(slot);
+        Integer card = slotToCard[slot];
+        if(card != null){
+            cardToSlot[card] = null;
+            slotToCard[slot] = null;
+            env.ui.removeCard(slot);
+        }
+
     }
 
     /**
@@ -167,5 +170,16 @@ public class Table {
 
     public boolean isSetRelevant(int[] cards, int[] slots){
         return (cards[0] == slotToCard[slots[0]] && cards[1] == slotToCard[slots[1]] && cards[2] == slotToCard[slots[2]]);
+    }
+
+    public void addToDeck(Dealer dealer){
+        for (int i = 0; i < slotToCard.length; i++){
+            if (slotToCard[i] != null)
+                dealer.addCard(slotToCard[i]);
+        }
+    }
+
+    public Integer getCard(int slot){
+        return slotToCard[slot];
     }
 }

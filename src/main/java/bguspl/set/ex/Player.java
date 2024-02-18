@@ -98,39 +98,42 @@ public class Player implements Runnable {
             // TODO implement main player loop
 
             int slot = inActions.take();
+            
+            //if there is a card in this place on the table
+            if (table.getCard(slot) != null){
 
-            // place or remove token
-            if (table.removeToken(id, slot)){
-                tokenCounter--;
-            }
-            else {
-                table.placeToken(id, slot);
-                tokenCounter++;
-            }
-
-            if (tokenCounter == 3){
-
-                // extract the set and create triple for the dealer
-                int[][] set = table.returnSet(id);
-                int[] setCards = set[0];
-                int[] setSlots = set[1];
-                Triple<Integer, int[], int[]> triple = new Triple(id, setCards, setSlots);
-                dealer.pushToTestSet(triple);
-
-                // wait until dealer responds
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    // TODO: handle exception
+                // place or remove token
+                if (table.removeToken(id, slot)){
+                    tokenCounter--;
+                }
+                else {
+                    table.placeToken(id, slot);
+                    tokenCounter++;
                 }
 
-                // point or penalty and clear queue
-                if (toScore)
-                    point();
-                else
-                    penalty();
-                inActions.clearQueue();
+                if (tokenCounter == 3){
 
+                    // extract the set and create triple for the dealer
+                    int[][] set = table.returnSet(id);
+                    int[] setCards = set[0];
+                    int[] setSlots = set[1];
+                    Triple<Integer, int[], int[]> triple = new Triple(id, setCards, setSlots);
+                    dealer.pushToTestSet(triple);
+
+                    // wait until dealer responds
+                    try {
+                        wait();
+                    } catch (InterruptedException e) {
+                        // TODO: handle exception
+                    }
+
+                    // point or penalty and clear queue
+                    if (toScore)
+                        point();
+                    else
+                        penalty();
+                    inActions.clearQueue();
+  
             }
 
         }
@@ -192,11 +195,19 @@ public class Player implements Runnable {
         int ignored = table.countCards(); // this part is just for demonstration in the unit tests
         env.ui.setScore(id, ++score);
 
-        env.ui.setFreeze(id, env.config.pointFreezeMillis);
-        // Which exception should we catch?
-        try {
-            Thread.sleep(env.config.pointFreezeMillis);
-        } catch (InterruptedException e) {}
+        long time_left = env.config.pointFreezeMillis;
+        long time = System.currentTimeMillis();
+
+        while(time_left > 0){
+            env.ui.setFreeze(id, time_left);
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {}
+
+            //update time left
+            time_left = env.config.pointFreezeMillis - (System.currentTimeMillis() - time);  
+        }
+        env.ui.setFreeze(id, 0);
     }
 
     /**
@@ -205,11 +216,21 @@ public class Player implements Runnable {
     public void penalty() {
         // TODO implement
 
-        env.ui.setFreeze(id, env.config.penaltyFreezeMillis);
-        // Which exception should we catch?
-        try {
-            Thread.sleep(env.config.penaltyFreezeMillis);
-        } catch (InterruptedException e) {}
+        long time_left = env.config.penaltyFreezeMillis;
+        long time = System.currentTimeMillis();
+        
+        while(time_left > 0){
+
+            env.ui.setFreeze(id, time_left);
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {}
+            time_left = env.config.pointFreezeMillis - (System.currentTimeMillis() - time);
+        }
+        
+        env.ui.setFreeze(id, 0);
+        
+
 
     }
 

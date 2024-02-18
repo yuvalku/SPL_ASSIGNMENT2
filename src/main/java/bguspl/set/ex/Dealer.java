@@ -81,6 +81,10 @@ public class Dealer implements Runnable {
      * The inner loop of the dealer thread that runs as long as the countdown did not time out.
      */
     private void timerLoop() {
+
+        // Added
+        reshuffleTime = System.currentTimeMillis() + 60000;
+
         while (!terminate && System.currentTimeMillis() < reshuffleTime) {
             sleepUntilWokenOrTimeout();
             updateTimerDisplay(false);
@@ -119,11 +123,14 @@ public class Dealer implements Runnable {
             int[] cards = toCheck.getSecond();
             int[] slots = toCheck.getThird();
 
+            boolean toUpdateTimer = false;
+
             // check if the cards in the set are still on the table
             if (table.isSetRelevant(cards, slots)){
 
                 // check if legal set and give penalty or point
                 boolean legalSet = env.util.testSet(cards);
+                toUpdateTimer = legalSet;
                 players[playerId].toScore(legalSet);
 
                 // remove the cards from the table if the set was legal
@@ -148,6 +155,10 @@ public class Dealer implements Runnable {
 
             // wake player and pop from queue
             players[playerId].interruptPlayer();
+            if (toUpdateTimer) {
+                updateTimerDisplay(true);
+                reshuffleTime = System.currentTimeMillis() + 60000;
+            } 
             toCheck = setQ.take();
         }
     }
@@ -173,10 +184,8 @@ public class Dealer implements Runnable {
         // TODO implement
 
         try {
-            Thread.sleep(100); // CHANGE TIME
-        } catch (InterruptedException e) {
-            wasInterruped = true;
-        }
+            Thread.sleep(10); // CHANGE TIME
+        } catch (InterruptedException e) {}
     }
 
     /**
@@ -184,6 +193,15 @@ public class Dealer implements Runnable {
      */
     private void updateTimerDisplay(boolean reset) {
         // TODO implement
+
+        if (reset){
+            env.ui.setCountdown(60000, false);
+        }
+        else{
+            long now = System.currentTimeMillis();
+            env.ui.setCountdown(reshuffleTime - now, reshuffleTime - now < env.config.turnTimeoutWarningMillis);
+        }
+            
     }
 
     /**
@@ -191,6 +209,17 @@ public class Dealer implements Runnable {
      */
     private void removeAllCardsFromTable() {
         // TODO implement
+
+        table.addToDeck(this);
+
+        for (int slot = 0; slot < env.config.tableSize; slot++){
+            table.removeCard(slot);
+
+            // remove all the tokens from the removed cards
+            for (int i = 0; i < players.length; i++){
+                players[i].removeToken(slot);
+            }
+        }
     }
 
     /**
@@ -204,5 +233,9 @@ public class Dealer implements Runnable {
     public void pushToTestSet(Triple<Integer, int[], int[]> triple){
         setQ.put(triple);
         dealerThread.interrupt();
+    }
+
+    public void addCard(int card){
+        deck.add(card);
     }
 }
