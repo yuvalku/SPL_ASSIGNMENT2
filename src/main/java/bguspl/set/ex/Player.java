@@ -95,7 +95,6 @@ public class Player implements Runnable {
         if (!human) createArtificialIntelligence();
 
         while (!terminate) {
-            // TODO implement main player loop
 
             int slot = inActions.take();
             
@@ -191,7 +190,6 @@ public class Player implements Runnable {
      * @post - the player's score is updated in the ui.
      */
     public void point() { 
-        // TODO implement
         int ignored = table.countCards(); // this part is just for demonstration in the unit tests
         env.ui.setScore(id, ++score);
 
@@ -214,7 +212,6 @@ public class Player implements Runnable {
      * Penalize a player and perform other related actions.
      */
     public void penalty() {
-        // TODO implement
 
         long time_left = env.config.penaltyFreezeMillis;
         long time = System.currentTimeMillis();

@@ -82,18 +82,20 @@ public class Dealer implements Runnable {
             updateTimerDisplay(true);
             timerLoop();
             removeAllCardsFromTable();
-            
         }
-        announceWinners();
-
+        
+        // terminate all players threads and wait for them to join
         for (int i = 0; i < playersThreads.length; i++){
             players[i].terminate();
         }
+
         for (int i = 0; i < playersThreads.length; i++){
             try{
                 playersThreads[i].join();
             } catch (InterruptedException e) {}
         }
+
+        announceWinners();
 
         env.logger.info("thread " + Thread.currentThread().getName() + " terminated.");
     }
