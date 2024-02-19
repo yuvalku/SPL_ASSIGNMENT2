@@ -29,7 +29,7 @@ public class ReaderWriter {
         WaitingDealer = true;
         while(!allowDealer()){
             try{
-                wait();
+                this.wait();
             } catch (InterruptedException e){}
         }
     }

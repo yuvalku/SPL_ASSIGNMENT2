@@ -183,8 +183,10 @@ public class Table {
     }
 
     public boolean isSetRelevant(int[] cards, int[] slots){
+        boolean output = false;
         rw.dealerLock();
-        boolean output = (cards[0] == slotToCard[slots[0]] && cards[1] == slotToCard[slots[1]] && cards[2] == slotToCard[slots[2]]);
+        if (slotToCard[slots[0]] != null && slotToCard[slots[1]] != null && slotToCard[slots[2]] != null)
+            output = (cards[0] == slotToCard[slots[0]] && cards[1] == slotToCard[slots[1]] && cards[2] == slotToCard[slots[2]]);
         rw.dealerUnlock();
         return output;
     }

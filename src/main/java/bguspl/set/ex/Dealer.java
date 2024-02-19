@@ -42,6 +42,7 @@ public class Dealer implements Runnable {
     protected setsQueue setQ;
     private Thread dealerThread;
     private Thread[] playersThreads;
+    protected Object[] locks;
 
     public Dealer(Env env, Table table, Player[] players) {
         this.env = env;
@@ -52,6 +53,11 @@ public class Dealer implements Runnable {
         //added
         terminate = false;
         playersThreads = new Thread[players.length];
+        setQ = new setsQueue();
+        locks = new Object[env.config.players];
+        for (int i = 0; i < locks.length; i++){
+            locks[i] = new Object();
+        }
     }
 
     /**
@@ -83,19 +89,14 @@ public class Dealer implements Runnable {
             timerLoop();
             removeAllCardsFromTable();
         }
-        
-        // terminate all players threads and wait for them to join
-        for (int i = 0; i < playersThreads.length; i++){
-            players[i].terminate();
-        }
+
+        announceWinners();
 
         for (int i = 0; i < playersThreads.length; i++){
             try{
                 playersThreads[i].join();
             } catch (InterruptedException e) {}
         }
-
-        announceWinners();
 
         env.logger.info("thread " + Thread.currentThread().getName() + " terminated.");
     }
@@ -121,6 +122,11 @@ public class Dealer implements Runnable {
      */
     public void terminate() {
         terminate = true;
+
+        // terminate all players threads and wait for them to join
+        for (int i = playersThreads.length - 1; i >= 0; i--){
+            players[i].terminate();
+        }
     }
 
     /**
@@ -136,9 +142,9 @@ public class Dealer implements Runnable {
      * Checks cards should be removed from the table and removes them.
      */
     private void removeCardsFromTable() {
-        // TODO implement
 
         Triple<Integer, int[], int[]> toCheck = setQ.take();
+
         while (toCheck != null){
 
             // extract data from the triple
@@ -170,7 +176,11 @@ public class Dealer implements Runnable {
             }
 
             // wake player and pop from queue
-            playersThreads[playerId].interrupt();
+            synchronized(locks[playerId]) {
+                players[playerId].needToWait = false;
+                locks[playerId].notifyAll();
+            }
+
             if (toUpdateTimer) {
                 updateTimerDisplay(true);
                 reshuffleTime = System.currentTimeMillis() + 60000;
@@ -185,12 +195,13 @@ public class Dealer implements Runnable {
     private void placeCardsOnTable() {
 
         // For each slot that equals null, remove the first card in the deck and place it on the table
-        for (int i = 0; i < env.config.tableSize; i++){
+        for (int i = 0; i < env.config.tableSize && deck.size() > 0; i++){
             if (table.slotToCard[i] == null){
                 int card = deck.remove(0);
                 table.placeCard(card, i); // NEEDED TO BE SYNCHRONIZED
             }
         }
+        table.hints();
     }
 
     /**
@@ -212,8 +223,11 @@ public class Dealer implements Runnable {
             env.ui.setCountdown(60000, false);
         }
         else{
-            long now = System.currentTimeMillis();
-            env.ui.setCountdown(reshuffleTime - now, reshuffleTime - now < env.config.turnTimeoutWarningMillis);
+            long delta = reshuffleTime - System.currentTimeMillis();
+            if (delta > 0)
+                env.ui.setCountdown(delta, delta < env.config.turnTimeoutWarningMillis);
+            else
+                env.ui.setCountdown(0, true);
         }
             
     }

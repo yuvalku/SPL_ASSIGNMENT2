@@ -58,6 +58,7 @@ public class Player implements Runnable {
     private Dealer dealer;
     private actionsQueue<Integer> inActions;
     private boolean toScore;
+    protected boolean needToWait;
 
 
     /**
@@ -82,6 +83,7 @@ public class Player implements Runnable {
         tokenCounter = 0;
         inActions = new actionsQueue<Integer>();
         toScore = false;
+        needToWait = true;
 
     }
 
@@ -99,7 +101,7 @@ public class Player implements Runnable {
             int slot = inActions.take();
             
             //if there is a card in this place on the table
-            if (table.getCard(slot) != null && (tokenCounter != 3 || !table.getToken(id, slot))){
+            if (table.getCard(slot) != null && (tokenCounter != 3 || table.getToken(id, slot))){
 
                 // place or remove token
                 table.rw.playerLock();
@@ -124,9 +126,14 @@ public class Player implements Runnable {
                     dealer.pushToTestSet(triple);
 
                     // wait until dealer responds
-                    try {
-                        wait();
-                    } catch (InterruptedException e) {}
+                    synchronized(dealer.locks[id]){
+                        while (needToWait){
+                            try {
+                                dealer.locks[id].wait();
+                            } catch (InterruptedException e) {}
+                        }
+                        needToWait = true;
+                    }
 
                     // point or penalty and clear queue
                     if (toScore)
