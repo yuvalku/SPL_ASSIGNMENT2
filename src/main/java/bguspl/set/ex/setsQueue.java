@@ -10,7 +10,6 @@ class setsQueue {
     }
 
     public synchronized void put(Triple<Integer, int[], int[]> set){
-
         sets.add(set);
     }
 

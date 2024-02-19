@@ -54,7 +54,7 @@ public class Player implements Runnable {
     private int score;
 
     // Added
-    private int tokenCounter;
+    private int tokenCounter; // We chose not to synchronize since when dealer changes this field, the player is still in wait
     private Dealer dealer;
     private actionsQueue<Integer> inActions;
     private boolean toScore;
@@ -100,10 +100,14 @@ public class Player implements Runnable {
             int slot = inActions.take();
             
             //if there is a card in this place on the table
-            if (table.getCard(slot) != null){
+            if (table.getCard(slot) != null && (tokenCounter != 3 || !table.getToken(id, slot))){
 
                 // place or remove token
-                if (table.removeToken(id, slot)){
+                table.rw.playerLock();
+                boolean wasRemoved = table.removeToken(id, slot);
+                table.rw.playerUnlock();
+
+                if (wasRemoved){
                     tokenCounter--;
                 }
                 else {
@@ -123,9 +127,7 @@ public class Player implements Runnable {
                     // wait until dealer responds
                     try {
                         wait();
-                    } catch (InterruptedException e) {
-                        // TODO: handle exception
-                    }
+                    } catch (InterruptedException e) {}
 
                     // point or penalty and clear queue
                     if (toScore)
@@ -177,7 +179,6 @@ public class Player implements Runnable {
      * @param slot - the slot corresponding to the key pressed.
      */
     public void keyPressed(int slot) {
-        // TODO implement
 
         inActions.put(slot);
 
@@ -228,9 +229,6 @@ public class Player implements Runnable {
         }
         
         env.ui.setFreeze(id, 0);
-        
-
-
     }
 
     public int score() {
@@ -240,7 +238,6 @@ public class Player implements Runnable {
     //Added
     public void toScore(boolean toscore) {
         toScore = toscore;
-        // To interrupt player?
     }
 
     public void removeToken(int slot){

@@ -32,6 +32,8 @@ public class Table {
     // Added
     private boolean[][] tokens;
 
+    protected ReaderWriter rw;
+
     /**
      * Constructor for testing.
      *
@@ -50,7 +52,10 @@ public class Table {
         for (int i = 0; i < tokens.length; i++)
             for (int j = 0; j < tokens[i].length; j++)
                 tokens[i][j] = false;
+        
+        rw = new ReaderWriter();
     }
+    
 
     /**
      * Constructor for actual usage.
@@ -100,10 +105,11 @@ public class Table {
             Thread.sleep(env.config.tableDelayMillis);
         } catch (InterruptedException ignored) {}
 
+        rw.dealerLock();
         cardToSlot[card] = slot;
         slotToCard[slot] = card;
+        rw.dealerLock();
 
-        // TODO implement
         env.ui.placeCard(card, slot);
     }
 
@@ -116,13 +122,14 @@ public class Table {
             Thread.sleep(env.config.tableDelayMillis);
         } catch (InterruptedException ignored) {}
 
-        // TODO implement
+        rw.dealerLock();
         Integer card = slotToCard[slot];
         if(card != null){
             cardToSlot[card] = null;
             slotToCard[slot] = null;
             env.ui.removeCard(slot);
         }
+        rw.dealerUnlock();
 
     }
 
@@ -132,8 +139,11 @@ public class Table {
      * @param slot   - the slot on which to place the token.
      */
     public void placeToken(int player, int slot) {
-        // TODO implement
+        
+        rw.playerLock();
         tokens[player][slot] = true;
+        rw.playerUnlock();
+
         env.ui.placeToken(player, slot);
     }
 
@@ -143,7 +153,7 @@ public class Table {
      * @param slot   - the slot from which to remove the token.
      * @return       - true iff a token was successfully removed.
      */
-    public boolean removeToken(int player, int slot) {
+    public boolean removeToken(int player, int slot) { // Needs to be synched from the outside
         // TODO implement
         boolean output = tokens[player][slot];
         if (output){
@@ -158,6 +168,8 @@ public class Table {
     public int[][] returnSet(int player){
         int j = 0;
         int[][] output = new int[2][3];
+
+        rw.playerLock();
         for (int i = 0; i < tokens[player].length; i++){
             if (tokens[player][i]){
                 output[0][j] = slotToCard[i];
@@ -165,21 +177,38 @@ public class Table {
                 j++;
             }
         }
+        rw.playerUnlock();
+
         return output;
     }
 
     public boolean isSetRelevant(int[] cards, int[] slots){
-        return (cards[0] == slotToCard[slots[0]] && cards[1] == slotToCard[slots[1]] && cards[2] == slotToCard[slots[2]]);
+        rw.dealerLock();
+        boolean output = (cards[0] == slotToCard[slots[0]] && cards[1] == slotToCard[slots[1]] && cards[2] == slotToCard[slots[2]]);
+        rw.dealerUnlock();
+        return output;
     }
 
     public void addToDeck(Dealer dealer){
+        rw.dealerLock();
         for (int i = 0; i < slotToCard.length; i++){
             if (slotToCard[i] != null)
                 dealer.addCard(slotToCard[i]);
         }
+        rw.dealerUnlock();
     }
 
     public Integer getCard(int slot){
-        return slotToCard[slot];
+        rw.playerLock();
+        Integer output = slotToCard[slot];
+        rw.playerUnlock();
+        return output;
+    }
+
+    public boolean getToken(int id, int slot){
+        rw.playerLock();
+        boolean output =  tokens[id][slot];
+        rw.playerUnlock();
+        return output;
     }
 }

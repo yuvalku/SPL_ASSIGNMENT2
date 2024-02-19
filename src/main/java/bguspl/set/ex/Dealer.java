@@ -72,18 +72,29 @@ public class Dealer implements Runnable {
         for (int i = 0; i < playersThreads.length; i++){
             playersThreads[i].start();
         }
-        
+
         while (!shouldFinish()) {
 
             // Added
             Collections.shuffle(deck);
 
             placeCardsOnTable();
-            timerLoop();
             updateTimerDisplay(true);
+            timerLoop();
             removeAllCardsFromTable();
+            
         }
         announceWinners();
+
+        for (int i = 0; i < playersThreads.length; i++){
+            players[i].terminate();
+        }
+        for (int i = 0; i < playersThreads.length; i++){
+            try{
+                playersThreads[i].join();
+            } catch (InterruptedException e) {}
+        }
+
         env.logger.info("thread " + Thread.currentThread().getName() + " terminated.");
     }
 
@@ -145,20 +156,13 @@ public class Dealer implements Runnable {
 
                 // remove the cards from the table if the set was legal
                 if (legalSet){
-                    for (int slot = 0; slot < slots.length; slot++){
-                        table.removeCard(slot);
+                    for (int j = 0; j < slots.length; j++){
+                        table.removeCard(slots[j]);
 
                         // remove all the tokens from the removed cards
                         for (int i = 0; i < players.length; i++){
-                            players[i].removeToken(slot);
+                            players[i].removeToken(slots[j]);
                         }
-                    }
-                }
-
-                //this is not a legal set, so remove tokens (and update tokens counter)
-                else{ 
-                    for(int i = 0 ; i < slots.length ; i++){
-                        players[playerId].removeToken(slots[i]);
                     }
                 }
             }
@@ -224,8 +228,11 @@ public class Dealer implements Runnable {
 
             // remove all the tokens from the removed cards
             for (int i = 0; i < players.length; i++){
+                table.rw.dealerLock();
                 players[i].removeToken(slot);
+                table.rw.dealerUnlock();
             }
+
         }
     }
 
