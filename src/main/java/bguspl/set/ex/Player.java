@@ -200,17 +200,13 @@ public class Player implements Runnable {
         int ignored = table.countCards(); // this part is just for demonstration in the unit tests
         env.ui.setScore(id, ++score);
 
-        long time_left = env.config.pointFreezeMillis;
-        long time = System.currentTimeMillis();
+        long endTime = System.currentTimeMillis() + env.config.pointFreezeMillis;
 
-        while(time_left > 0){
-            env.ui.setFreeze(id, time_left);
+        while(endTime > System.currentTimeMillis()){
+            env.ui.setFreeze(id, endTime - System.currentTimeMillis() + 1000);
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {}
-
-            //update time left
-            time_left = env.config.pointFreezeMillis - (System.currentTimeMillis() - time);  
         }
         env.ui.setFreeze(id, 0);
     }
@@ -220,16 +216,13 @@ public class Player implements Runnable {
      */
     public void penalty() {
 
-        long time_left = env.config.penaltyFreezeMillis;
-        long time = System.currentTimeMillis();
+        long endTime = System.currentTimeMillis() + env.config.penaltyFreezeMillis;
         
-        while(time_left > 0){
-
-            env.ui.setFreeze(id, time_left);
+        while(endTime > System.currentTimeMillis()){
+            env.ui.setFreeze(id, endTime - System.currentTimeMillis() + 1000);
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {}
-            time_left = env.config.pointFreezeMillis - (System.currentTimeMillis() - time);
         }
         
         env.ui.setFreeze(id, 0);

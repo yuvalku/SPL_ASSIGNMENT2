@@ -240,8 +240,7 @@ public class Dealer implements Runnable {
                 env.ui.setCountdown(delta, delta < env.config.turnTimeoutWarningMillis);
             else
                 env.ui.setCountdown(0, true);
-        }
-            
+        }     
     }
 
     /**
@@ -261,7 +260,6 @@ public class Dealer implements Runnable {
                 players[i].removeToken(slotsOrder[slot]);
                 table.rw.dealerUnlock();
             }
-
         }
     }
 
@@ -315,7 +313,6 @@ public class Dealer implements Runnable {
             slotsOrder[i] = slotsOrder[j];
             slotsOrder[j] = temp;
         }
-
         // System.out.print(" {");
         // for (int i = 0; i < slotsOrder.length; i++){
         //     System.out.print(slotsOrder[i] + " ");
