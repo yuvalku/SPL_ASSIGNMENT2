@@ -12,32 +12,38 @@ class actionsQueue<E> {
     }
 
     public synchronized void put(E slot){
-        while(actions.size() >= MAX){
-            try{
+        try{
+            while(actions.size() >= MAX){
                 this.wait();
-            } catch (InterruptedException ignored){}
-        }
+            }
+        } catch (InterruptedException ignored){}
 
-        actions.add(slot);
-        this.notifyAll();
+        if (actions.size() < MAX){
+            actions.add(slot);
+            this.notifyAll();
+        }
     }
 
     public synchronized E take() {
-        while(actions.size() == 0){
-            try{
+        try{
+            while(actions.size() == 0){
                 this.wait();
-            } catch (InterruptedException ignored){}
-        }
+            }
+        } catch (InterruptedException ignored){}
 
-        E action = actions.get(0);
-        actions.remove(0);
-        this.notifyAll();
-        return action;
+        if (actions.size() != 0){
+            E action = actions.get(0);
+            actions.remove(0);
+            this.notifyAll();
+            return action;
+        }
+        return null;
     }
 
     public synchronized void clearQueue(){
         while(actions.size() != 0){
             actions.remove(0);
         }
+        this.notifyAll();
     }
 }

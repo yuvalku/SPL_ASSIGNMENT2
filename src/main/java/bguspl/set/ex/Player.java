@@ -98,10 +98,10 @@ public class Player implements Runnable {
 
         while (!terminate) {
 
-            int slot = inActions.take();
+            Integer slot = inActions.take();
             
             //if there is a card in this place on the table
-            if (table.getCard(slot) != null && (tokenCounter != 3 || table.getToken(id, slot))){
+            if (slot != null && table.getCard(slot) != null && (tokenCounter != 3 || table.getToken(id, slot))){
 
                 // place or remove token
                 table.rw.playerLock();
@@ -157,7 +157,6 @@ public class Player implements Runnable {
         aiThread = new Thread(() -> {
             env.logger.info("thread " + Thread.currentThread().getName() + " starting.");
             while (!terminate) {
-                // TODO implement player key press simulator
 
                 Random random = new Random();
                 int slot = random.nextInt(12);
@@ -177,6 +176,7 @@ public class Player implements Runnable {
      */
     public void terminate() {
         terminate = true;
+        if (!human) aiThread.interrupt();
     }
 
     /**

@@ -1,11 +1,17 @@
 package bguspl.set.ex;
 
 import bguspl.set.Env;
+
+import java.util.Arrays;
 import java.util.Collections;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+//Added
+import java.util.Random;
 
 /**
  * This class manages the dealer's threads and data
@@ -43,6 +49,7 @@ public class Dealer implements Runnable {
     private Thread dealerThread;
     private Thread[] playersThreads;
     protected Object[] locks;
+    private int[] slotsOrder;
 
     public Dealer(Env env, Table table, Player[] players) {
         this.env = env;
@@ -57,6 +64,10 @@ public class Dealer implements Runnable {
         locks = new Object[env.config.players];
         for (int i = 0; i < locks.length; i++){
             locks[i] = new Object();
+        }
+        slotsOrder = new int[env.config.tableSize];
+        for (int i = 0; i < slotsOrder.length; i++){
+            slotsOrder[i] = i;
         }
     }
 
@@ -83,6 +94,7 @@ public class Dealer implements Runnable {
 
             // Added
             Collections.shuffle(deck);
+            shuffleArray(slotsOrder);
 
             placeCardsOnTable();
             updateTimerDisplay(true);
@@ -91,12 +103,6 @@ public class Dealer implements Runnable {
         }
 
         announceWinners();
-
-        for (int i = 0; i < playersThreads.length; i++){
-            try{
-                playersThreads[i].join();
-            } catch (InterruptedException e) {}
-        }
 
         env.logger.info("thread " + Thread.currentThread().getName() + " terminated.");
     }
@@ -122,10 +128,15 @@ public class Dealer implements Runnable {
      */
     public void terminate() {
         terminate = true;
+        env.ui.dispose();
 
         // terminate all players threads and wait for them to join
         for (int i = playersThreads.length - 1; i >= 0; i--){
             players[i].terminate();
+            playersThreads[i].interrupt();
+            try{
+                playersThreads[i].join();
+            } catch (InterruptedException e) {}
         }
     }
 
@@ -172,6 +183,7 @@ public class Dealer implements Runnable {
                             players[i].removeToken(slots[j]);
                         }
                     }
+                    shuffleArray(slotsOrder);
                 }
             }
 
@@ -193,15 +205,15 @@ public class Dealer implements Runnable {
      * Check if any cards can be removed from the deck and placed on the table.
      */
     private void placeCardsOnTable() {
-
-        // For each slot that equals null, remove the first card in the deck and place it on the table
-        for (int i = 0; i < env.config.tableSize && deck.size() > 0; i++){
-            if (table.slotToCard[i] == null){
+       
+        // For each slot that equals null, remove the first card in the deck and place it on the table in random order
+        for (int i = 0; i < slotsOrder.length && deck.size() > 0; i++){
+            if (table.slotToCard[slotsOrder[i]] == null){
                 int card = deck.remove(0);
-                table.placeCard(card, i); // NEEDED TO BE SYNCHRONIZED
+                table.placeCard(card, slotsOrder[i]); // NEEDED TO BE SYNCHRONIZED
             }
         }
-        table.hints();
+        // table.hints();
     }
 
     /**
@@ -238,14 +250,15 @@ public class Dealer implements Runnable {
     private void removeAllCardsFromTable() {
 
         table.addToDeck(this);
+        shuffleArray(slotsOrder);
 
         for (int slot = 0; slot < env.config.tableSize; slot++){
-            table.removeCard(slot);
+            table.removeCard(slotsOrder[slot]);
 
             // remove all the tokens from the removed cards
             for (int i = 0; i < players.length; i++){
                 table.rw.dealerLock();
-                players[i].removeToken(slot);
+                players[i].removeToken(slotsOrder[slot]);
                 table.rw.dealerUnlock();
             }
 
@@ -289,5 +302,24 @@ public class Dealer implements Runnable {
 
     public void addCard(int card){
         deck.add(card);
+    }
+
+    private void shuffleArray(int[] arr){
+        Random rand = new Random();
+
+        for (int i = slotsOrder.length - 1; i > 0; i--) {
+            int j = rand.nextInt(i + 1);
+
+            // Swap slotsOrder[i] and slotsOrder[j]
+            int temp = slotsOrder[i];
+            slotsOrder[i] = slotsOrder[j];
+            slotsOrder[j] = temp;
+        }
+
+        // System.out.print(" {");
+        // for (int i = 0; i < slotsOrder.length; i++){
+        //     System.out.print(slotsOrder[i] + " ");
+        // }
+        // System.out.print("}");
     }
 }
