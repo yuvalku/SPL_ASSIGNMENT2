@@ -30,9 +30,9 @@ public class Table {
     protected final Integer[] cardToSlot; // slot per card (if any)
 
     // Added
-    private boolean[][] tokens;
-
+    private final boolean[][] tokens;
     protected ReaderWriter rw;
+    private boolean canPlaceTokens;
 
     /**
      * Constructor for testing.
@@ -54,6 +54,7 @@ public class Table {
                 tokens[i][j] = false;
         
         rw = new ReaderWriter();
+        canPlaceTokens = false;
     }
     
 
@@ -222,5 +223,19 @@ public class Table {
             placeToken(player, slot);
         rw.playerUnlock();
         return output;
+    }
+
+    public boolean getCanPlaceToken(){
+        boolean output;
+        rw.playerLock();
+        output = canPlaceTokens;
+        rw.playerUnlock();
+        return output;
+    }
+
+    public void setCanPlaceToken(boolean newVal){
+        rw.dealerLock();
+        canPlaceTokens = newVal;
+        rw.dealerUnlock();
     }
 }

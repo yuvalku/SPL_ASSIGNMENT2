@@ -54,13 +54,12 @@ public class Player implements Runnable {
     private int score;
 
     // Added
-    private int tokenCounter; // We chose not to synchronize since when dealer changes this field, the player is still in wait
+    private int tokenCounter;
     private Dealer dealer;
     private actionsQueue<Integer> inActions;
-    private Boolean toScore;
+    private volatile Boolean toScore;
     protected boolean needToWait;
     private Object TCLock;
-
 
     /**
      * The class constructor.
@@ -102,8 +101,8 @@ public class Player implements Runnable {
 
             Integer slot = inActions.take();
             
-            //if there is a card in this place on the table
-            if (slot != null && table.getCard(slot) != null && (tokenCounter != 3 || table.getToken(id, slot))){
+            // check if input is relevant at the moment
+            if (table.getCanPlaceToken() && slot != null && table.getCard(slot) != null && (tokenCounter != 3 || table.getToken(id, slot))){
 
                 // place or remove token
                 table.rw.playerLock();

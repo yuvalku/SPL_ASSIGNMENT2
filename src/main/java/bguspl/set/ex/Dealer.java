@@ -97,13 +97,15 @@ public class Dealer implements Runnable {
             shuffleArray(slotsOrder);
 
             placeCardsOnTable();
+            table.setCanPlaceToken(true);
             updateTimerDisplay(true);
             timerLoop();
+            table.setCanPlaceToken(false);
             removeAllCardsFromTable();
         }
 
         announceWinners();
-        
+
         // terminate all players threads and wait for them to join
         for (int i = playersThreads.length - 1; i >= 0; i--){
             players[i].terminate();
@@ -214,10 +216,9 @@ public class Dealer implements Runnable {
         for (int i = 0; i < slotsOrder.length && deck.size() > 0; i++){
             if (table.slotToCard[slotsOrder[i]] == null){
                 int card = deck.remove(0);
-                table.placeCard(card, slotsOrder[i]); // NEEDED TO BE SYNCHRONIZED
+                table.placeCard(card, slotsOrder[i]); 
             }
         }
-        // table.hints();
     }
 
     /**
@@ -259,11 +260,11 @@ public class Dealer implements Runnable {
             table.removeCard(slotsOrder[slot]);
 
             // remove all the tokens from the removed cards
+            table.rw.dealerLock();
             for (int i = 0; i < players.length; i++){
-                table.rw.dealerLock();
                 players[i].removeToken(slotsOrder[slot]);
-                table.rw.dealerUnlock();
             }
+            table.rw.dealerUnlock();
         }
     }
 
@@ -286,10 +287,12 @@ public class Dealer implements Runnable {
 
         //add winner's id's to a new array
         int[] players_id = new int[counter];
-        int j=0;
+        int j = 0;
         for (int i = 0; i < players.length; i++){
-            if (players[i].score() == maxScore) 
-            players_id[j] = i;
+            if (players[i].score() == maxScore) {
+                players_id[j] = i;
+                j++;
+            }
         }
         
         //announce winners
