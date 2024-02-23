@@ -108,7 +108,7 @@ public class Table {
         rw.dealerLock();
         cardToSlot[card] = slot;
         slotToCard[slot] = card;
-        rw.dealerLock();
+        rw.dealerUnlock();
 
         env.ui.placeCard(card, slot);
     }
@@ -140,10 +140,7 @@ public class Table {
      */
     public void placeToken(int player, int slot) {
         
-        rw.playerLock();
         tokens[player][slot] = true;
-        rw.playerUnlock();
-
         env.ui.placeToken(player, slot);
     }
 
@@ -170,11 +167,15 @@ public class Table {
         int[][] output = new int[2][3];
 
         rw.playerLock();
-        for (int i = 0; i < tokens[player].length; i++){
+        for (int i = 0; i < tokens[player].length && output != null; i++){
             if (tokens[player][i]){
-                output[0][j] = slotToCard[i];
-                output[1][j] = i;
-                j++;
+                if (slotToCard[i] == null)
+                    output = null;
+                else{
+                    output[0][j] = slotToCard[i];
+                    output[1][j] = i;
+                    j++;
+                }
             }
         }
         rw.playerUnlock();
@@ -210,6 +211,15 @@ public class Table {
     public boolean getToken(int id, int slot){
         rw.playerLock();
         boolean output =  tokens[id][slot];
+        rw.playerUnlock();
+        return output;
+    }
+
+    public boolean ourPlaceToken(int player, int slot){
+        rw.playerLock();
+        boolean output = slotToCard[slot] != null;
+        if (output)
+            placeToken(player, slot);
         rw.playerUnlock();
         return output;
     }

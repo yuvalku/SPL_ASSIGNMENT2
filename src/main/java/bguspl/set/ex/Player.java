@@ -57,7 +57,7 @@ public class Player implements Runnable {
     private int tokenCounter; // We chose not to synchronize since when dealer changes this field, the player is still in wait
     private Dealer dealer;
     private actionsQueue<Integer> inActions;
-    private boolean toScore;
+    private Boolean toScore;
     protected boolean needToWait;
 
 
@@ -82,7 +82,7 @@ public class Player implements Runnable {
         score = 0;
         tokenCounter = 0;
         inActions = new actionsQueue<Integer>();
-        toScore = false;
+        toScore = null;
         needToWait = true;
 
     }
@@ -112,35 +112,40 @@ public class Player implements Runnable {
                     tokenCounter--;
                 }
                 else {
-                    table.placeToken(id, slot);
-                    tokenCounter++;
+                    if (table.ourPlaceToken(id, slot))
+                        tokenCounter++;
                 }
 
                 if (tokenCounter == 3){
 
                     // extract the set and create triple for the dealer
                     int[][] set = table.returnSet(id);
-                    int[] setCards = set[0];
-                    int[] setSlots = set[1];
-                    Triple<Integer, int[], int[]> triple = new Triple(id, setCards, setSlots);
-                    dealer.pushToTestSet(triple);
+                    if (set != null){
+                        int[] setCards = set[0];
+                        int[] setSlots = set[1];
+                        Triple<Integer, int[], int[]> triple = new Triple(id, setCards, setSlots);
+                        dealer.pushToTestSet(triple);
 
-                    // wait until dealer responds
-                    synchronized(dealer.locks[id]){
-                        while (needToWait){
-                            try {
-                                dealer.locks[id].wait();
-                            } catch (InterruptedException e) {}
+                        // wait until dealer responds
+                        synchronized(dealer.locks[id]){
+                            while (needToWait && !terminate){
+                                try {
+                                    dealer.locks[id].wait();
+                                } catch (InterruptedException e) {}
+                            }
+                            needToWait = true;
                         }
-                        needToWait = true;
-                    }
 
-                    // point or penalty and clear queue
-                    if (toScore)
-                        point();
-                    else
-                        penalty();
-                    inActions.clearQueue();
+                        // point or penalty and clear queue
+                        // if set irrelevant do nothing
+                        if (toScore != null){
+                            if (toScore)
+                                point();
+                            else 
+                                penalty();
+                            inActions.clearQueue();
+                        }
+                    }
                 }
             }
         }
@@ -233,7 +238,7 @@ public class Player implements Runnable {
     }
     
     //Added
-    public void toScore(boolean toscore) {
+    public void toScore(Boolean toscore) {
         toScore = toscore;
     }
 

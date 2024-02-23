@@ -1,22 +1,20 @@
 package bguspl.set.ex;
 
 public class ReaderWriter {
-    boolean activeDealer;
-    int activePlayers;
-    boolean WaitingDealer;
+    private boolean activeDealer;
+    private int activePlayers;
 
     public ReaderWriter(){
         activePlayers = 0;
         activeDealer = false;
-        
     }
 
     public synchronized void playerLock(){
-        while(!allowPlayer()){
-            try{
+        try{
+            while(activeDealer){
                 this.wait();
-            } catch (InterruptedException ignored){}
-        }
+            }
+        } catch (InterruptedException ignored){}
         activePlayers++;
     }
 
@@ -26,24 +24,16 @@ public class ReaderWriter {
     }
 
     public synchronized void dealerLock(){
-        WaitingDealer = true;
-        while(!allowDealer()){
-            try{
+        activeDealer = true;
+        try{
+            while(activePlayers > 0){
                 this.wait();
-            } catch (InterruptedException e){}
-        }
+            }
+        } catch (InterruptedException e){}
     }
 
     public synchronized void dealerUnlock(){
         activeDealer = false;
         notifyAll();
-    }
-
-    protected boolean allowPlayer(){
-        return !activeDealer;
-    }
-
-    protected boolean allowDealer(){
-        return activePlayers == 0;
     }
 }

@@ -103,6 +103,14 @@ public class Dealer implements Runnable {
         }
 
         announceWinners();
+                // terminate all players threads and wait for them to join
+                for (int i = playersThreads.length - 1; i >= 0; i--){
+                    players[i].terminate();
+                    playersThreads[i].interrupt();
+                    try{
+                        playersThreads[i].join();
+                    } catch (InterruptedException e) {}
+                }
 
         env.logger.info("thread " + Thread.currentThread().getName() + " terminated.");
     }
@@ -113,7 +121,7 @@ public class Dealer implements Runnable {
     private void timerLoop() {
 
         // Added
-        reshuffleTime = System.currentTimeMillis() + 60000;
+        reshuffleTime = System.currentTimeMillis() + env.config.turnTimeoutMillis;
 
         while (!terminate && System.currentTimeMillis() < reshuffleTime) {
             sleepUntilWokenOrTimeout();
@@ -127,17 +135,10 @@ public class Dealer implements Runnable {
      * Called when the game should be terminated.
      */
     public void terminate() {
-        terminate = true;
         env.ui.dispose();
 
-        // terminate all players threads and wait for them to join
-        for (int i = playersThreads.length - 1; i >= 0; i--){
-            players[i].terminate();
-            playersThreads[i].interrupt();
-            try{
-                playersThreads[i].join();
-            } catch (InterruptedException e) {}
-        }
+
+        terminate = true;
     }
 
     /**
@@ -179,13 +180,17 @@ public class Dealer implements Runnable {
                         table.removeCard(slots[j]);
 
                         // remove all the tokens from the removed cards
+                        table.rw.dealerLock();
                         for (int i = 0; i < players.length; i++){
                             players[i].removeToken(slots[j]);
                         }
+                        table.rw.dealerUnlock();
                     }
                     shuffleArray(slotsOrder);
                 }
             }
+            else 
+                players[playerId].toScore(null);
 
             // wake player and pop from queue
             synchronized(locks[playerId]) {
@@ -195,7 +200,7 @@ public class Dealer implements Runnable {
 
             if (toUpdateTimer) {
                 updateTimerDisplay(true);
-                reshuffleTime = System.currentTimeMillis() + 60000;
+                reshuffleTime = System.currentTimeMillis() + env.config.turnTimeoutMillis;
             } 
             toCheck = setQ.take();
         }
@@ -232,7 +237,7 @@ public class Dealer implements Runnable {
     private void updateTimerDisplay(boolean reset) {
 
         if (reset){
-            env.ui.setCountdown(60000, false);
+            env.ui.setCountdown(env.config.turnTimeoutMillis, false);
         }
         else{
             long delta = reshuffleTime - System.currentTimeMillis();
