@@ -103,14 +103,15 @@ public class Dealer implements Runnable {
         }
 
         announceWinners();
-                // terminate all players threads and wait for them to join
-                for (int i = playersThreads.length - 1; i >= 0; i--){
-                    players[i].terminate();
-                    playersThreads[i].interrupt();
-                    try{
-                        playersThreads[i].join();
-                    } catch (InterruptedException e) {}
-                }
+        
+        // terminate all players threads and wait for them to join
+        for (int i = playersThreads.length - 1; i >= 0; i--){
+            players[i].terminate();
+            playersThreads[i].interrupt();
+            try{
+                playersThreads[i].join();
+            } catch (InterruptedException e) {}
+        }
 
         env.logger.info("thread " + Thread.currentThread().getName() + " terminated.");
     }
@@ -136,8 +137,6 @@ public class Dealer implements Runnable {
      */
     public void terminate() {
         env.ui.dispose();
-
-
         terminate = true;
     }
 

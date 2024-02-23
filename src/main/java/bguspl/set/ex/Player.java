@@ -59,6 +59,7 @@ public class Player implements Runnable {
     private actionsQueue<Integer> inActions;
     private Boolean toScore;
     protected boolean needToWait;
+    private Object TCLock;
 
 
     /**
@@ -84,6 +85,7 @@ public class Player implements Runnable {
         inActions = new actionsQueue<Integer>();
         toScore = null;
         needToWait = true;
+        TCLock = new Object();
 
     }
 
@@ -109,11 +111,11 @@ public class Player implements Runnable {
                 table.rw.playerUnlock();
 
                 if (wasRemoved){
-                    tokenCounter--;
+                    synchronized (TCLock) {tokenCounter--;}
                 }
                 else {
                     if (table.ourPlaceToken(id, slot))
-                        tokenCounter++;
+                        synchronized (TCLock) {tokenCounter++;}
                 }
 
                 if (tokenCounter == 3){
@@ -244,6 +246,6 @@ public class Player implements Runnable {
 
     public void removeToken(int slot){
         if (table.removeToken(id, slot))
-            tokenCounter--;
+            synchronized (TCLock) {tokenCounter--;}
     }
 }
