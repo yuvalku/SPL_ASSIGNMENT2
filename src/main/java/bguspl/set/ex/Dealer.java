@@ -2,7 +2,6 @@ package bguspl.set.ex;
 
 import bguspl.set.Env;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import java.util.List;
@@ -10,8 +9,6 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-//Added
-import java.util.Random;
 
 /**
  * This class manages the dealer's threads and data
@@ -50,6 +47,8 @@ public class Dealer implements Runnable {
     private Thread[] playersThreads;
     protected Object[] locks;
     private int[] slotsOrder;
+    private Random rand;
+    private boolean firstSleep;
 
     public Dealer(Env env, Table table, Player[] players) {
         this.env = env;
@@ -59,7 +58,7 @@ public class Dealer implements Runnable {
 
         //added
         terminate = false;
-        playersThreads = new Thread[players.length];
+        playersThreads = new Thread[env.config.players];
         setQ = new setsQueue();
         locks = new Object[env.config.players];
         for (int i = 0; i < locks.length; i++){
@@ -69,6 +68,8 @@ public class Dealer implements Runnable {
         for (int i = 0; i < slotsOrder.length; i++){
             slotsOrder[i] = i;
         }
+        rand = new Random();
+        firstSleep = true;
     }
 
     /**
@@ -83,7 +84,7 @@ public class Dealer implements Runnable {
         env.logger.info("thread " + Thread.currentThread().getName() + " starting.");
 
         // create and run the player threads
-        for (int i = 0; i < players.length; i++){
+        for (int i = 0; i < playersThreads.length; i++){
             playersThreads[i] = new Thread(players[i]);
         }
         for (int i = 0; i < playersThreads.length; i++){
@@ -94,11 +95,14 @@ public class Dealer implements Runnable {
 
             // Added
             Collections.shuffle(deck);
+            
+            //in order to place the cards in random order on table
             shuffleArray(slotsOrder);
-
-            placeCardsOnTable();
-            table.setCanPlaceToken(true);
+            
             updateTimerDisplay(true);
+            placeCardsOnTable();
+            //allow players to place tokens on table
+            table.setCanPlaceToken(true);
             timerLoop();
             table.setCanPlaceToken(false);
             removeAllCardsFromTable();
@@ -125,6 +129,7 @@ public class Dealer implements Runnable {
 
         // Added
         reshuffleTime = System.currentTimeMillis() + env.config.turnTimeoutMillis;
+        firstSleep = true;
 
         while (!terminate && System.currentTimeMillis() < reshuffleTime) {
             sleepUntilWokenOrTimeout();
@@ -211,13 +216,25 @@ public class Dealer implements Runnable {
      * Check if any cards can be removed from the deck and placed on the table.
      */
     private void placeCardsOnTable() {
-       
+        
+        // to know if new cards were placed
+        int deckSize = deck.size();
+
         // For each slot that equals null, remove the first card in the deck and place it on the table in random order
         for (int i = 0; i < slotsOrder.length && deck.size() > 0; i++){
+            //if there is no card in this place
             if (table.slotToCard[slotsOrder[i]] == null){
+                //put a new card
                 int card = deck.remove(0);
                 table.placeCard(card, slotsOrder[i]); 
             }
+        }
+
+        // if new cards were placed, present hints
+        if (env.config.hints && deck.size() < deckSize) {
+            System.out.println();
+            System.out.println("New Hints:");
+            table.hints();
         }
     }
 
@@ -226,9 +243,16 @@ public class Dealer implements Runnable {
      */
     private void sleepUntilWokenOrTimeout() {
 
-        try {
-            Thread.sleep(10); // CHANGE TIME???
-        } catch (InterruptedException e) {}
+        if (setQ.isEmpty()){
+            try {
+                long timeleft = reshuffleTime - System.currentTimeMillis();
+                if (!firstSleep && timeleft > env.config.turnTimeoutWarningMillis)
+                    Thread.sleep(1000);
+                else
+                    Thread.sleep(10); 
+            } catch (InterruptedException e) {}
+        }
+        firstSleep = false;
     }
 
     /**
@@ -242,7 +266,7 @@ public class Dealer implements Runnable {
         else{
             long delta = reshuffleTime - System.currentTimeMillis();
             if (delta > 0)
-                env.ui.setCountdown(delta, delta < env.config.turnTimeoutWarningMillis);
+                env.ui.setCountdown(delta, delta <= env.config.turnTimeoutWarningMillis);
             else
                 env.ui.setCountdown(0, true);
         }     
@@ -308,9 +332,9 @@ public class Dealer implements Runnable {
     public void addCard(int card){
         deck.add(card);
     }
-
+    
+    // create random order to put cards on table
     private void shuffleArray(int[] arr){
-        Random rand = new Random();
 
         for (int i = slotsOrder.length - 1; i > 0; i--) {
             int j = rand.nextInt(i + 1);
@@ -320,10 +344,5 @@ public class Dealer implements Runnable {
             slotsOrder[i] = slotsOrder[j];
             slotsOrder[j] = temp;
         }
-        // System.out.print(" {");
-        // for (int i = 0; i < slotsOrder.length; i++){
-        //     System.out.print(slotsOrder[i] + " ");
-        // }
-        // System.out.print("}");
     }
 }

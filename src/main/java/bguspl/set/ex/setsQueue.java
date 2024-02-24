@@ -23,4 +23,8 @@ class setsQueue {
         return set;
     }
 
+    public synchronized boolean isEmpty(){
+        return sets.isEmpty();
+    }
+
 }

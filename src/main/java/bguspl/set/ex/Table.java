@@ -161,6 +161,8 @@ public class Table {
         return output;
     }
 
+    
+
     //this method returns a 2-D array which the first array is the cards, and the second one is the slots each card
     //is the corresponding slot, for a specific player.
     public int[][] returnSet(int player){
