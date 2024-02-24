@@ -152,7 +152,7 @@ public class Table {
      * @return       - true iff a token was successfully removed.
      */
     public boolean removeToken(int player, int slot) { // Needs to be synched from the outside
-        // TODO implement
+        
         boolean output = tokens[player][slot];
         if (output){
             tokens[player][slot] = false;
@@ -161,13 +161,11 @@ public class Table {
         return output;
     }
 
-    
-
     //this method returns a 2-D array which the first array is the cards, and the second one is the slots each card
     //is the corresponding slot, for a specific player.
     public int[][] returnSet(int player){
         int j = 0;
-        int[][] output = new int[2][3];
+        int[][] output = new int[2][env.config.featureSize];
 
         rw.playerLock();
         for (int i = 0; i < tokens[player].length && output != null; i++){
@@ -187,10 +185,14 @@ public class Table {
     }
 
     public boolean isSetRelevant(int[] cards, int[] slots){
-        boolean output = false;
+        boolean output = true;
         rw.dealerLock();
-        if (slotToCard[slots[0]] != null && slotToCard[slots[1]] != null && slotToCard[slots[2]] != null)
-            output = (cards[0] == slotToCard[slots[0]] && cards[1] == slotToCard[slots[1]] && cards[2] == slotToCard[slots[2]]);
+        for (int i = 0; i < slots.length && output; i++){
+            if (slotToCard[slots[i]] == null)
+                output = false;
+            else
+                output = (cards[i] == slotToCard[slots[i]]);
+        }
         rw.dealerUnlock();
         return output;
     }

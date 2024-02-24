@@ -102,7 +102,7 @@ public class Player implements Runnable {
             Integer slot = inActions.take();
             
             // check if input is relevant at the moment
-            if (table.getCanPlaceToken() && slot != null && table.getCard(slot) != null && (tokenCounter != 3 || table.getToken(id, slot))){
+            if (table.getCanPlaceToken() && slot != null && table.getCard(slot) != null && (tokenCounter != env.config.featureSize || table.getToken(id, slot))){
 
                 // place or remove token
                 table.rw.playerLock();
@@ -117,7 +117,7 @@ public class Player implements Runnable {
                         synchronized (TCLock) {tokenCounter++;}
                 }
 
-                if (tokenCounter == 3){
+                if (tokenCounter == env.config.featureSize){
 
                     // extract the set and create triple for the dealer
                     int[][] set = table.returnSet(id);
@@ -167,10 +167,7 @@ public class Player implements Runnable {
                 Random random = new Random();
                 int slot = random.nextInt(12);
                 inActions.put(slot);
-                
-                // try {
-                //     synchronized (this) { wait(); }
-                // } catch (InterruptedException ignored) {}
+
             }
             env.logger.info("thread " + Thread.currentThread().getName() + " terminated.");
         }, "computer-" + id);
