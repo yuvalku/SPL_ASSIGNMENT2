@@ -1,0 +1,65 @@
+[16:54:01.957] [INFO   ] thread bguspl.set.Main.main() starting.
+[16:54:01.966] [SEVERE ] cannot read configuration file config.properties trying from resources.
+[16:54:01.967] [SEVERE ] configuration file was loaded from resources directory.
+[16:54:02.493] [INFO   ] thread dealer starting.
+[16:54:02.493] [INFO   ] thread dealer starting.
+[16:54:02.493] [INFO   ] thread Thread-2 starting.
+[16:54:02.493] [INFO   ] thread Thread-1 starting.
+[16:54:02.500] [SEVERE ] updating elapsed time to 0
+[16:54:02.608] [SEVERE ] placing card 42 in slot 3
+[16:54:02.713] [SEVERE ] placing card 50 in slot 0
+[16:54:02.824] [SEVERE ] placing card 80 in slot 4
+[16:54:02.925] [SEVERE ] placing card 57 in slot 11
+[16:54:03.033] [SEVERE ] placing card 1 in slot 8
+[16:54:03.135] [SEVERE ] placing card 8 in slot 9
+[16:54:03.237] [SEVERE ] placing card 52 in slot 7
+[16:54:03.344] [SEVERE ] placing card 60 in slot 5
+[16:54:03.446] [SEVERE ] placing card 6 in slot 6
+[16:54:03.547] [SEVERE ] placing card 68 in slot 10
+[16:54:03.661] [SEVERE ] placing card 65 in slot 2
+[16:54:03.767] [SEVERE ] placing card 26 in slot 1
+[16:54:03.803] [SEVERE ] updating elapsed time to 36
+[16:54:04.815] [SEVERE ] updating elapsed time to 1048
+[16:54:05.821] [SEVERE ] updating elapsed time to 2054
+[16:54:06.825] [SEVERE ] updating elapsed time to 3058
+[16:54:07.828] [SEVERE ] updating elapsed time to 4061
+[16:54:08.830] [SEVERE ] updating elapsed time to 5063
+[16:54:09.834] [SEVERE ] updating elapsed time to 6067
+[16:54:10.837] [SEVERE ] updating elapsed time to 7070
+[16:54:11.847] [SEVERE ] updating elapsed time to 8080
+[16:54:12.855] [SEVERE ] updating elapsed time to 9088
+[16:54:13.861] [SEVERE ] updating elapsed time to 10094
+[16:54:14.869] [SEVERE ] updating elapsed time to 11102
+[16:54:15.889] [SEVERE ] updating elapsed time to 12122
+[16:54:16.899] [SEVERE ] updating elapsed time to 13132
+[16:54:17.908] [SEVERE ] updating elapsed time to 14141
+[16:54:18.920] [SEVERE ] updating elapsed time to 15153
+[16:54:19.935] [SEVERE ] updating elapsed time to 16168
+[16:54:20.943] [SEVERE ] updating elapsed time to 17176
+[16:54:21.968] [SEVERE ] updating elapsed time to 18201
+[16:54:22.987] [SEVERE ] updating elapsed time to 19220
+[16:54:23.995] [SEVERE ] updating elapsed time to 20228
+[16:54:24.999] [SEVERE ] updating elapsed time to 21232
+[16:54:26.004] [SEVERE ] updating elapsed time to 22237
+[16:54:26.536] [SEVERE ] exit button pressed
+[16:54:26.536] [SEVERE ] disposing of user interface elements
+[16:54:27.010] [SEVERE ] updating elapsed time to 23243
+[16:54:27.112] [SEVERE ] removing card from slot 1
+[16:54:27.217] [SEVERE ] removing card from slot 11
+[16:54:27.322] [SEVERE ] removing card from slot 4
+[16:54:27.424] [SEVERE ] removing card from slot 2
+[16:54:27.528] [SEVERE ] removing card from slot 7
+[16:54:27.632] [SEVERE ] removing card from slot 9
+[16:54:27.745] [SEVERE ] removing card from slot 5
+[16:54:27.855] [SEVERE ] removing card from slot 0
+[16:54:27.965] [SEVERE ] removing card from slot 8
+[16:54:28.074] [SEVERE ] removing card from slot 10
+[16:54:28.184] [SEVERE ] removing card from slot 6
+[16:54:28.299] [SEVERE ] removing card from slot 3
+[16:54:28.299] [SEVERE ] announcing winner(s): player 1, player 2
+[16:54:28.299] [INFO   ] thread Thread-2 terminated.
+[16:54:28.299] [INFO   ] thread Thread-1 terminated.
+[16:54:28.299] [INFO   ] thread dealer terminated.
+[16:54:28.299] [INFO   ] thread dealer terminated.
+[16:54:28.299] [SEVERE ] thanks for playing... it was fun!
+[16:54:28.299] [INFO   ] thread bguspl.set.Main.main() terminated.

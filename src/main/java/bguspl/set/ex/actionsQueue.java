@@ -8,7 +8,7 @@ class actionsQueue<E> {
 
     public actionsQueue() {
         MAX = 3;
-        actions = new Vector<>(); 
+        actions = new Vector<>();
     }
 
     public synchronized void put(E slot){

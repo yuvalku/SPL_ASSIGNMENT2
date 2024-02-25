@@ -33,6 +33,7 @@ public class Table {
     private final boolean[][] tokens;
     protected ReaderWriter rw;
     private boolean canPlaceTokens;
+    private Object CPTlock;
 
     /**
      * Constructor for testing.
@@ -55,6 +56,7 @@ public class Table {
         
         rw = new ReaderWriter();
         canPlaceTokens = false;
+        CPTlock = new Object();
     }
     
 
@@ -72,6 +74,10 @@ public class Table {
      * This method prints all possible legal sets of cards that are currently on the table.
      */
     public void hints() {
+
+        // Added
+        rw.dealerLock();
+
         List<Integer> deck = Arrays.stream(slotToCard).filter(Objects::nonNull).collect(Collectors.toList());
         env.util.findSets(deck, Integer.MAX_VALUE).forEach(set -> {
             StringBuilder sb = new StringBuilder().append("Hint: Set found: ");
@@ -79,6 +85,9 @@ public class Table {
             int[][] features = env.util.cardsToFeatures(set);
             System.out.println(sb.append("slots: ").append(slots).append(" features: ").append(Arrays.deepToString(features)));
         });
+
+        // Added
+        rw.dealerUnlock();
     }
 
     /**
@@ -230,16 +239,31 @@ public class Table {
     }
 
     public boolean getCanPlaceToken(){
-        boolean output;
-        rw.playerLock();
-        output = canPlaceTokens;
-        rw.playerUnlock();
+        
+        boolean output = false;
+        synchronized (CPTlock){
+            try {
+                while (!canPlaceTokens){
+                    output = true;
+                    CPTlock.wait();
+                }
+            } catch (InterruptedException e) {}
+        }
         return output;
     }
 
     public void setCanPlaceToken(boolean newVal){
+
+        synchronized(CPTlock){
+            canPlaceTokens = newVal;
+            CPTlock.notifyAll();
+        }
+    }
+
+    public boolean doSetExists(){
         rw.dealerLock();
-        canPlaceTokens = newVal;
+        List<Integer> cards = Arrays.stream(slotToCard).filter(Objects::nonNull).collect(Collectors.toList());
         rw.dealerUnlock();
+        return !env.util.findSets(cards, Integer.MAX_VALUE).isEmpty();
     }
 }

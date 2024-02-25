@@ -1,0 +1,43 @@
+[16:42:09.703] [INFO   ] thread bguspl.set.Main.main() starting.
+[16:42:09.703] [SEVERE ] cannot read configuration file config.properties trying from resources.
+[16:42:09.703] [SEVERE ] configuration file was loaded from resources directory.
+[16:42:10.262] [INFO   ] thread dealer starting.
+[16:42:10.263] [INFO   ] thread dealer starting.
+[16:42:10.264] [INFO   ] thread Thread-1 starting.
+[16:42:10.264] [INFO   ] thread Thread-2 starting.
+[16:42:10.268] [SEVERE ] updating countdown to 10000
+[16:42:10.370] [SEVERE ] placing card 8 in slot 4
+[16:42:10.473] [SEVERE ] placing card 52 in slot 6
+[16:42:10.577] [SEVERE ] placing card 23 in slot 2
+[16:42:10.684] [SEVERE ] placing card 33 in slot 0
+[16:42:10.790] [SEVERE ] placing card 27 in slot 8
+[16:42:10.893] [SEVERE ] placing card 44 in slot 5
+[16:42:10.995] [SEVERE ] placing card 24 in slot 10
+[16:42:11.104] [SEVERE ] placing card 73 in slot 1
+[16:42:11.224] [SEVERE ] placing card 49 in slot 3
+[16:42:11.336] [SEVERE ] placing card 35 in slot 7
+[16:42:11.445] [SEVERE ] placing card 58 in slot 11
+[16:42:11.554] [SEVERE ] placing card 70 in slot 9
+[16:42:11.591] [SEVERE ] updating countdown to 9988
+[16:42:11.700] [SEVERE ] exit button pressed
+[16:42:11.700] [SEVERE ] disposing of user interface elements
+[16:42:12.602] [SEVERE ] updating countdown to 8977
+[16:42:12.713] [SEVERE ] removing card from slot 2
+[16:42:12.815] [SEVERE ] removing card from slot 4
+[16:42:12.927] [SEVERE ] removing card from slot 8
+[16:42:13.036] [SEVERE ] removing card from slot 0
+[16:42:13.138] [SEVERE ] removing card from slot 1
+[16:42:13.246] [SEVERE ] removing card from slot 7
+[16:42:13.362] [SEVERE ] removing card from slot 9
+[16:42:13.463] [SEVERE ] removing card from slot 5
+[16:42:13.566] [SEVERE ] removing card from slot 11
+[16:42:13.677] [SEVERE ] removing card from slot 3
+[16:42:13.782] [SEVERE ] removing card from slot 10
+[16:42:13.885] [SEVERE ] removing card from slot 6
+[16:42:13.885] [SEVERE ] announcing winner(s): player 1, player 2
+[16:42:13.885] [INFO   ] thread Thread-2 terminated.
+[16:42:13.885] [INFO   ] thread Thread-1 terminated.
+[16:42:13.885] [INFO   ] thread dealer terminated.
+[16:42:13.885] [INFO   ] thread dealer terminated.
+[16:42:13.885] [SEVERE ] thanks for playing... it was fun!
+[16:42:13.885] [INFO   ] thread bguspl.set.Main.main() terminated.

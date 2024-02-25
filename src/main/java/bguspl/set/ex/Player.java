@@ -99,10 +99,15 @@ public class Player implements Runnable {
 
         while (!terminate) {
 
+            // if can't place token yet, wait until dealer notifies you
+            // if waited, clear actions queue
+            if (table.getCanPlaceToken())
+                inActions.clearQueue();
+
             Integer slot = inActions.take();
             
             // check if input is relevant at the moment
-            if (table.getCanPlaceToken() && slot != null && table.getCard(slot) != null && (tokenCounter != env.config.featureSize || table.getToken(id, slot))){
+            if (slot != null && table.getCard(slot) != null && (tokenCounter != env.config.featureSize || table.getToken(id, slot))){
 
                 // place or remove token
                 table.rw.playerLock();

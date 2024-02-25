@@ -101,12 +101,15 @@ public class Dealer implements Runnable {
             
             updateTimerDisplay(true);
             placeCardsOnTable();
+
             //allow players to place tokens on table
             table.setCanPlaceToken(true);
             timerLoop();
             table.setCanPlaceToken(false);
             removeAllCardsFromTable();
         }
+
+        table.setCanPlaceToken(true);
 
         announceWinners();
 
@@ -128,10 +131,14 @@ public class Dealer implements Runnable {
     private void timerLoop() {
 
         // Added
-        reshuffleTime = System.currentTimeMillis() + env.config.turnTimeoutMillis;
+        if (env.config.turnTimeoutMillis > 0)
+            reshuffleTime = System.currentTimeMillis() + env.config.turnTimeoutMillis;
+        else 
+            reshuffleTime = System.currentTimeMillis();
+
         firstSleep = true;
 
-        while (!terminate && System.currentTimeMillis() < reshuffleTime) {
+        while (!terminate && (env.config.turnTimeoutMillis <= 0 || System.currentTimeMillis() < reshuffleTime) && (env.config.turnTimeoutMillis > 0 || table.doSetExists())) {
             sleepUntilWokenOrTimeout();
             updateTimerDisplay(false);
             removeCardsFromTable();
@@ -206,7 +213,12 @@ public class Dealer implements Runnable {
 
             if (toUpdateTimer) {
                 updateTimerDisplay(true);
-                reshuffleTime = System.currentTimeMillis() + env.config.turnTimeoutMillis;
+                if (env.config.turnTimeoutMillis > 0){
+                    reshuffleTime = System.currentTimeMillis() + env.config.turnTimeoutMillis;
+                    firstSleep = true;
+                }
+                else 
+                    reshuffleTime = System.currentTimeMillis();
             } 
             toCheck = setQ.take();
         }
@@ -242,15 +254,34 @@ public class Dealer implements Runnable {
      * Sleep for a fixed amount of time or until the thread is awakened for some purpose.
      */
     private void sleepUntilWokenOrTimeout() {
-
+        
+        // if the queue isn't empty, don't sleep
         if (setQ.isEmpty()){
-            try {
-                long timeleft = reshuffleTime - System.currentTimeMillis();
-                if (!firstSleep && timeleft > env.config.turnTimeoutWarningMillis)
+
+            // if there isn't time to update, wait until interrupted
+            if(env.config.turnTimeoutMillis < 0){
+                try {
+                    synchronized(this) {this.wait();}
+                } catch (InterruptedException e) {}
+            }
+            
+            // if timer goes up
+            else if (env.config.turnTimeoutMillis == 0){
+                try {
                     Thread.sleep(1000);
-                else
-                    Thread.sleep(10); 
-            } catch (InterruptedException e) {}
+                } catch (InterruptedException e) {}
+            }
+            
+            // if timer goes down
+            else {
+                try {
+                    long timeleft = reshuffleTime - System.currentTimeMillis();
+                    if (!firstSleep && timeleft > env.config.turnTimeoutWarningMillis)
+                        Thread.sleep(1000);
+                    else
+                        Thread.sleep(10);
+                } catch (InterruptedException e) {}
+            }
         }
         firstSleep = false;
     }
@@ -261,14 +292,29 @@ public class Dealer implements Runnable {
     private void updateTimerDisplay(boolean reset) {
 
         if (reset){
-            env.ui.setCountdown(env.config.turnTimeoutMillis, false);
+
+            // if timer goes down
+            if(env.config.turnTimeoutMillis > 0)
+                env.ui.setCountdown(env.config.turnTimeoutMillis, false);
+
+            // if timer goes up
+            else if(env.config.turnTimeoutMillis == 0)
+                env.ui.setElapsed(0);
         }
         else{
-            long delta = reshuffleTime - System.currentTimeMillis();
-            if (delta > 0)
-                env.ui.setCountdown(delta, delta <= env.config.turnTimeoutWarningMillis);
-            else
-                env.ui.setCountdown(0, true);
+
+            // if timer goes down
+            if(env.config.turnTimeoutMillis > 0){
+                long delta = reshuffleTime - System.currentTimeMillis();
+                if (delta > 0)
+                    env.ui.setCountdown(delta, delta <= env.config.turnTimeoutWarningMillis);
+                else
+                    env.ui.setCountdown(0, true);
+            }
+
+            // if timer goes up
+            else if (env.config.turnTimeoutMillis == 0)
+                env.ui.setElapsed(System.currentTimeMillis() - reshuffleTime);
         }     
     }
 

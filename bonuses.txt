@@ -12,7 +12,9 @@ with a short description of:
 
 1. Fully supporting all configuration fields and avoiding the use of magic numbers
 
-We are not entitled to this bonus.
+a. 
+b.
+c.
 
 --------------------
 

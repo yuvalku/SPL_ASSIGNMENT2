@@ -1,0 +1,273 @@
+[15:53:24.345] [INFO   ] thread bguspl.set.Main.main() starting.
+[15:53:24.345] [SEVERE ] cannot read configuration file config.properties trying from resources.
+[15:53:24.345] [SEVERE ] configuration file was loaded from resources directory.
+[15:53:24.887] [INFO   ] thread dealer starting.
+[15:53:24.888] [INFO   ] thread dealer starting.
+[15:53:24.889] [INFO   ] thread Thread-1 starting.
+[15:53:24.889] [INFO   ] thread Thread-2 starting.
+[15:53:24.890] [SEVERE ] updating elapsed time to 0
+[15:53:24.997] [SEVERE ] placing card 63 in slot 11
+[15:53:25.100] [SEVERE ] placing card 66 in slot 3
+[15:53:25.211] [SEVERE ] placing card 42 in slot 7
+[15:53:25.314] [SEVERE ] placing card 74 in slot 4
+[15:53:25.422] [SEVERE ] placing card 4 in slot 9
+[15:53:25.534] [SEVERE ] placing card 77 in slot 5
+[15:53:25.636] [SEVERE ] placing card 60 in slot 2
+[15:53:25.744] [SEVERE ] placing card 67 in slot 6
+[15:53:25.856] [SEVERE ] placing card 25 in slot 8
+[15:53:25.967] [SEVERE ] placing card 75 in slot 10
+[15:53:26.089] [SEVERE ] placing card 72 in slot 1
+[15:53:26.201] [SEVERE ] placing card 76 in slot 0
+[15:53:26.339] [SEVERE ] updating elapsed time to 108
+[15:53:26.448] [SEVERE ] updating elapsed time to 217
+[15:53:26.558] [SEVERE ] updating elapsed time to 327
+[15:53:26.667] [SEVERE ] updating elapsed time to 436
+[15:53:26.776] [SEVERE ] updating elapsed time to 545
+[15:53:26.886] [SEVERE ] updating elapsed time to 655
+[15:53:26.996] [SEVERE ] updating elapsed time to 765
+[15:53:27.105] [SEVERE ] updating elapsed time to 874
+[15:53:27.214] [SEVERE ] updating elapsed time to 983
+[15:53:27.324] [SEVERE ] updating elapsed time to 1093
+[15:53:27.433] [SEVERE ] updating elapsed time to 1202
+[15:53:27.542] [SEVERE ] updating elapsed time to 1311
+[15:53:27.652] [SEVERE ] updating elapsed time to 1421
+[15:53:27.761] [SEVERE ] updating elapsed time to 1530
+[15:53:27.871] [SEVERE ] updating elapsed time to 1640
+[15:53:27.981] [SEVERE ] updating elapsed time to 1750
+[15:53:28.090] [SEVERE ] updating elapsed time to 1859
+[15:53:28.199] [SEVERE ] updating elapsed time to 1968
+[15:53:28.309] [SEVERE ] updating elapsed time to 2078
+[15:53:28.418] [SEVERE ] updating elapsed time to 2187
+[15:53:28.528] [SEVERE ] updating elapsed time to 2297
+[15:53:28.641] [SEVERE ] updating elapsed time to 2410
+[15:53:28.751] [SEVERE ] updating elapsed time to 2520
+[15:53:28.860] [SEVERE ] updating elapsed time to 2629
+[15:53:28.970] [SEVERE ] updating elapsed time to 2739
+[15:53:29.080] [SEVERE ] updating elapsed time to 2849
+[15:53:29.189] [SEVERE ] updating elapsed time to 2958
+[15:53:29.298] [SEVERE ] updating elapsed time to 3067
+[15:53:29.408] [SEVERE ] updating elapsed time to 3177
+[15:53:29.517] [SEVERE ] updating elapsed time to 3286
+[15:53:29.630] [SEVERE ] updating elapsed time to 3399
+[15:53:29.739] [SEVERE ] updating elapsed time to 3508
+[15:53:29.850] [SEVERE ] updating elapsed time to 3619
+[15:53:29.962] [SEVERE ] updating elapsed time to 3731
+[15:53:30.071] [SEVERE ] updating elapsed time to 3840
+[15:53:30.180] [SEVERE ] updating elapsed time to 3949
+[15:53:30.290] [SEVERE ] updating elapsed time to 4059
+[15:53:30.399] [SEVERE ] updating elapsed time to 4168
+[15:53:30.509] [SEVERE ] updating elapsed time to 4278
+[15:53:30.619] [SEVERE ] updating elapsed time to 4388
+[15:53:30.728] [SEVERE ] updating elapsed time to 4497
+[15:53:30.837] [SEVERE ] updating elapsed time to 4606
+[15:53:30.947] [SEVERE ] updating elapsed time to 4716
+[15:53:31.058] [SEVERE ] updating elapsed time to 4827
+[15:53:31.167] [SEVERE ] updating elapsed time to 4936
+[15:53:31.277] [SEVERE ] updating elapsed time to 5046
+[15:53:31.387] [SEVERE ] updating elapsed time to 5156
+[15:53:31.496] [SEVERE ] updating elapsed time to 5265
+[15:53:31.606] [SEVERE ] updating elapsed time to 5375
+[15:53:31.716] [SEVERE ] updating elapsed time to 5485
+[15:53:31.825] [SEVERE ] updating elapsed time to 5594
+[15:53:31.938] [SEVERE ] updating elapsed time to 5707
+[15:53:32.049] [SEVERE ] updating elapsed time to 5818
+[15:53:32.159] [SEVERE ] updating elapsed time to 5928
+[15:53:32.269] [SEVERE ] updating elapsed time to 6038
+[15:53:32.381] [SEVERE ] updating elapsed time to 6150
+[15:53:32.490] [SEVERE ] updating elapsed time to 6259
+[15:53:32.600] [SEVERE ] updating elapsed time to 6369
+[15:53:32.710] [SEVERE ] updating elapsed time to 6479
+[15:53:32.820] [SEVERE ] updating elapsed time to 6589
+[15:53:32.929] [SEVERE ] updating elapsed time to 6698
+[15:53:33.040] [SEVERE ] updating elapsed time to 6809
+[15:53:33.150] [SEVERE ] updating elapsed time to 6919
+[15:53:33.260] [SEVERE ] updating elapsed time to 7029
+[15:53:33.370] [SEVERE ] updating elapsed time to 7139
+[15:53:33.479] [SEVERE ] updating elapsed time to 7248
+[15:53:33.589] [SEVERE ] updating elapsed time to 7358
+[15:53:33.702] [SEVERE ] updating elapsed time to 7471
+[15:53:33.812] [SEVERE ] updating elapsed time to 7581
+[15:53:33.921] [SEVERE ] updating elapsed time to 7690
+[15:53:34.031] [SEVERE ] updating elapsed time to 7800
+[15:53:34.141] [SEVERE ] updating elapsed time to 7910
+[15:53:34.252] [SEVERE ] updating elapsed time to 8021
+[15:53:34.362] [SEVERE ] updating elapsed time to 8131
+[15:53:34.472] [SEVERE ] updating elapsed time to 8241
+[15:53:34.537] [SEVERE ] key 65 was pressed by player 1
+[15:53:34.537] [SEVERE ] player 1 placing token on slot 4
+[15:53:34.582] [SEVERE ] updating elapsed time to 8351
+[15:53:34.691] [SEVERE ] updating elapsed time to 8460
+[15:53:34.801] [SEVERE ] updating elapsed time to 8570
+[15:53:34.911] [SEVERE ] updating elapsed time to 8680
+[15:53:35.021] [SEVERE ] updating elapsed time to 8790
+[15:53:35.131] [SEVERE ] updating elapsed time to 8900
+[15:53:35.240] [SEVERE ] updating elapsed time to 9009
+[15:53:35.350] [SEVERE ] updating elapsed time to 9119
+[15:53:35.460] [SEVERE ] updating elapsed time to 9229
+[15:53:35.569] [SEVERE ] updating elapsed time to 9338
+[15:53:35.678] [SEVERE ] updating elapsed time to 9447
+[15:53:35.788] [SEVERE ] updating elapsed time to 9557
+[15:53:35.898] [SEVERE ] updating elapsed time to 9667
+[15:53:36.008] [SEVERE ] updating elapsed time to 9777
+[15:53:36.118] [SEVERE ] updating elapsed time to 9887
+[15:53:36.232] [SEVERE ] updating elapsed time to 10001
+[15:53:36.343] [SEVERE ] updating elapsed time to 10112
+[15:53:36.452] [SEVERE ] updating elapsed time to 10221
+[15:53:36.561] [SEVERE ] updating elapsed time to 10330
+[15:53:36.671] [SEVERE ] updating elapsed time to 10440
+[15:53:36.781] [SEVERE ] updating elapsed time to 10550
+[15:53:36.891] [SEVERE ] updating elapsed time to 10660
+[15:53:37.000] [SEVERE ] updating elapsed time to 10769
+[15:53:37.016] [SEVERE ] key 70 was pressed by player 1
+[15:53:37.016] [SEVERE ] player 1 placing token on slot 7
+[15:53:37.111] [SEVERE ] updating elapsed time to 10880
+[15:53:37.220] [SEVERE ] updating elapsed time to 10989
+[15:53:37.331] [SEVERE ] updating elapsed time to 11100
+[15:53:37.441] [SEVERE ] updating elapsed time to 11210
+[15:53:37.551] [SEVERE ] updating elapsed time to 11320
+[15:53:37.660] [SEVERE ] updating elapsed time to 11429
+[15:53:37.770] [SEVERE ] updating elapsed time to 11539
+[15:53:37.880] [SEVERE ] updating elapsed time to 11649
+[15:53:37.990] [SEVERE ] updating elapsed time to 11759
+[15:53:38.100] [SEVERE ] updating elapsed time to 11869
+[15:53:38.212] [SEVERE ] updating elapsed time to 11981
+[15:53:38.323] [SEVERE ] updating elapsed time to 12092
+[15:53:38.416] [SEVERE ] key 67 was pressed by player 1
+[15:53:38.416] [SEVERE ] player 1 placing token on slot 10
+[15:53:38.432] [SEVERE ] updating elapsed time to 12201
+[15:53:38.432] [SEVERE ] setting player 1 freeze to 0
+[15:53:38.542] [SEVERE ] updating elapsed time to 12311
+[15:53:38.653] [SEVERE ] updating elapsed time to 12422
+[15:53:38.763] [SEVERE ] updating elapsed time to 12532
+[15:53:38.794] [SEVERE ] key 67 was pressed by player 1
+[15:53:38.806] [SEVERE ] removing player 1 token from slot 10
+[15:53:38.873] [SEVERE ] updating elapsed time to 12642
+[15:53:38.920] [SEVERE ] key 88 was pressed by player 1
+[15:53:38.920] [SEVERE ] player 1 placing token on slot 9
+[15:53:38.920] [SEVERE ] updating elapsed time to 12689
+[15:53:39.045] [SEVERE ] removing card from slot 4
+[15:53:39.045] [SEVERE ] removing player 1 token from slot 4
+[15:53:39.161] [SEVERE ] removing card from slot 7
+[15:53:39.177] [SEVERE ] removing player 1 token from slot 7
+[15:53:39.286] [SEVERE ] removing card from slot 9
+[15:53:39.286] [SEVERE ] removing player 1 token from slot 9
+[15:53:39.302] [SEVERE ] updating elapsed time to 0
+[15:53:39.302] [SEVERE ] setting player 1 score to 1
+[15:53:39.302] [SEVERE ] setting player 1 freeze to 0
+[15:53:39.412] [SEVERE ] placing card 54 in slot 7
+[15:53:39.537] [SEVERE ] placing card 50 in slot 9
+[15:53:39.650] [SEVERE ] placing card 58 in slot 4
+[15:53:39.816] [SEVERE ] updating elapsed time to 514
+[15:53:39.926] [SEVERE ] updating elapsed time to 624
+[15:53:40.035] [SEVERE ] updating elapsed time to 733
+[15:53:40.145] [SEVERE ] updating elapsed time to 843
+[15:53:40.255] [SEVERE ] updating elapsed time to 953
+[15:53:40.366] [SEVERE ] updating elapsed time to 1064
+[15:53:40.481] [SEVERE ] updating elapsed time to 1179
+[15:53:40.596] [SEVERE ] updating elapsed time to 1294
+[15:53:40.711] [SEVERE ] updating elapsed time to 1409
+[15:53:40.822] [SEVERE ] updating elapsed time to 1520
+[15:53:40.932] [SEVERE ] updating elapsed time to 1630
+[15:53:41.042] [SEVERE ] updating elapsed time to 1740
+[15:53:41.152] [SEVERE ] updating elapsed time to 1850
+[15:53:41.262] [SEVERE ] updating elapsed time to 1960
+[15:53:41.372] [SEVERE ] updating elapsed time to 2070
+[15:53:41.486] [SEVERE ] updating elapsed time to 2184
+[15:53:41.595] [SEVERE ] updating elapsed time to 2293
+[15:53:41.721] [SEVERE ] updating elapsed time to 2419
+[15:53:41.831] [SEVERE ] updating elapsed time to 2529
+[15:53:41.942] [SEVERE ] updating elapsed time to 2640
+[15:53:42.055] [SEVERE ] updating elapsed time to 2753
+[15:53:42.164] [SEVERE ] updating elapsed time to 2862
+[15:53:42.274] [SEVERE ] updating elapsed time to 2972
+[15:53:42.384] [SEVERE ] updating elapsed time to 3082
+[15:53:42.494] [SEVERE ] updating elapsed time to 3192
+[15:53:42.604] [SEVERE ] updating elapsed time to 3302
+[15:53:42.715] [SEVERE ] updating elapsed time to 3413
+[15:53:42.840] [SEVERE ] updating elapsed time to 3538
+[15:53:42.949] [SEVERE ] updating elapsed time to 3647
+[15:53:43.060] [SEVERE ] updating elapsed time to 3758
+[15:53:43.173] [SEVERE ] updating elapsed time to 3871
+[15:53:43.283] [SEVERE ] updating elapsed time to 3981
+[15:53:43.393] [SEVERE ] updating elapsed time to 4091
+[15:53:43.502] [SEVERE ] updating elapsed time to 4200
+[15:53:43.617] [SEVERE ] updating elapsed time to 4315
+[15:53:43.727] [SEVERE ] updating elapsed time to 4425
+[15:53:43.837] [SEVERE ] updating elapsed time to 4535
+[15:53:43.948] [SEVERE ] updating elapsed time to 4646
+[15:53:44.058] [SEVERE ] updating elapsed time to 4756
+[15:53:44.168] [SEVERE ] updating elapsed time to 4866
+[15:53:44.278] [SEVERE ] updating elapsed time to 4976
+[15:53:44.387] [SEVERE ] updating elapsed time to 5085
+[15:53:44.497] [SEVERE ] updating elapsed time to 5195
+[15:53:44.609] [SEVERE ] updating elapsed time to 5307
+[15:53:44.720] [SEVERE ] updating elapsed time to 5418
+[15:53:44.830] [SEVERE ] updating elapsed time to 5528
+[15:53:44.942] [SEVERE ] updating elapsed time to 5640
+[15:53:45.051] [SEVERE ] updating elapsed time to 5749
+[15:53:45.164] [SEVERE ] updating elapsed time to 5862
+[15:53:45.274] [SEVERE ] updating elapsed time to 5972
+[15:53:45.384] [SEVERE ] updating elapsed time to 6082
+[15:53:45.494] [SEVERE ] updating elapsed time to 6192
+[15:53:45.605] [SEVERE ] updating elapsed time to 6303
+[15:53:45.715] [SEVERE ] updating elapsed time to 6413
+[15:53:45.824] [SEVERE ] updating elapsed time to 6522
+[15:53:45.934] [SEVERE ] updating elapsed time to 6632
+[15:53:46.043] [SEVERE ] updating elapsed time to 6741
+[15:53:46.153] [SEVERE ] updating elapsed time to 6851
+[15:53:46.263] [SEVERE ] updating elapsed time to 6961
+[15:53:46.373] [SEVERE ] updating elapsed time to 7071
+[15:53:46.483] [SEVERE ] updating elapsed time to 7181
+[15:53:46.593] [SEVERE ] updating elapsed time to 7291
+[15:53:46.703] [SEVERE ] updating elapsed time to 7401
+[15:53:46.814] [SEVERE ] updating elapsed time to 7512
+[15:53:46.924] [SEVERE ] updating elapsed time to 7622
+[15:53:47.034] [SEVERE ] updating elapsed time to 7732
+[15:53:47.144] [SEVERE ] updating elapsed time to 7842
+[15:53:47.255] [SEVERE ] updating elapsed time to 7953
+[15:53:47.365] [SEVERE ] updating elapsed time to 8063
+[15:53:47.476] [SEVERE ] updating elapsed time to 8174
+[15:53:47.585] [SEVERE ] updating elapsed time to 8283
+[15:53:47.695] [SEVERE ] updating elapsed time to 8393
+[15:53:47.805] [SEVERE ] updating elapsed time to 8503
+[15:53:47.915] [SEVERE ] updating elapsed time to 8613
+[15:53:48.024] [SEVERE ] updating elapsed time to 8722
+[15:53:48.131] [SEVERE ] updating elapsed time to 8829
+[15:53:48.235] [SEVERE ] updating elapsed time to 8933
+[15:53:48.345] [SEVERE ] updating elapsed time to 9043
+[15:53:48.454] [SEVERE ] updating elapsed time to 9152
+[15:53:48.560] [SEVERE ] updating elapsed time to 9258
+[15:53:48.670] [SEVERE ] updating elapsed time to 9368
+[15:53:48.782] [SEVERE ] updating elapsed time to 9480
+[15:53:48.891] [SEVERE ] updating elapsed time to 9589
+[15:53:49.002] [SEVERE ] updating elapsed time to 9700
+[15:53:49.111] [SEVERE ] updating elapsed time to 9809
+[15:53:49.221] [SEVERE ] updating elapsed time to 9919
+[15:53:49.336] [SEVERE ] updating elapsed time to 10034
+[15:53:49.445] [SEVERE ] updating elapsed time to 10143
+[15:53:49.555] [SEVERE ] updating elapsed time to 10253
+[15:53:49.664] [SEVERE ] updating elapsed time to 10362
+[15:53:49.774] [SEVERE ] updating elapsed time to 10472
+[15:53:49.884] [SEVERE ] updating elapsed time to 10582
+[15:53:49.884] [SEVERE ] exit button pressed
+[15:53:49.884] [SEVERE ] disposing of user interface elements
+[15:53:49.996] [SEVERE ] updating elapsed time to 10694
+[15:53:50.104] [SEVERE ] removing card from slot 7
+[15:53:50.219] [SEVERE ] removing card from slot 5
+[15:53:50.321] [SEVERE ] removing card from slot 6
+[15:53:50.433] [SEVERE ] removing card from slot 10
+[15:53:50.534] [SEVERE ] removing card from slot 8
+[15:53:50.635] [SEVERE ] removing card from slot 9
+[15:53:50.746] [SEVERE ] removing card from slot 0
+[15:53:50.857] [SEVERE ] removing card from slot 2
+[15:53:50.959] [SEVERE ] removing card from slot 3
+[15:53:51.068] [SEVERE ] removing card from slot 1
+[15:53:51.180] [SEVERE ] removing card from slot 11
+[15:53:51.281] [SEVERE ] removing card from slot 4
+[15:53:51.282] [SEVERE ] announcing winner(s): player 1
+[15:53:51.283] [INFO   ] thread Thread-2 terminated.
+[15:53:51.283] [INFO   ] thread Thread-1 terminated.
+[15:53:51.284] [INFO   ] thread dealer terminated.
+[15:53:51.284] [INFO   ] thread dealer terminated.
+[15:53:51.284] [SEVERE ] thanks for playing... it was fun!
+[15:53:51.285] [INFO   ] thread bguspl.set.Main.main() terminated.
