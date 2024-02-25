@@ -12,15 +12,31 @@ with a short description of:
 
 1. Fully supporting all configuration fields and avoiding the use of magic numbers
 
-a. 
-b.
-c.
+a. During the whole assignment we didn't use magic numbers in order to describe the size of data types, we acted as
+    the configuration fields are not constant, and took into consideration that they can be changed.
+
+b. It was used in the following classes: "Player", "Dealer" and "Table", and in each class it was used in various methods,
+    such as - initilization fields in constructor, in all run() methods, all auxiliary methods we used...
+
+c. We changed the configuration fields (those we can use to test correctness), ran the program and made 
+    sure the game is displayed as expected.
 
 --------------------
 
 2. Terminating all threads (that you created) gracefully and in reverse order to the order they were created in.
 
-We are not entitled to this bonus.
+a. At the begginning of dealer's run method, we created the new player threads starting from player[0] to player[players-1].
+    Then we called the threads' start method in the same order.
+    At the end of dealer's run method, we iterated over the player threads in the reversed order, and for each player:
+    - Call player[i].terminate in order for them to exit the loop in run() method.
+    - Call playerThread[i].interrupt to break them out of the blockingQueue (actionsQueue)
+    - Call playerThread[i].join in order to make sure the thread ends before terminating the next one.
+    Each non-human player would wait for the aiThread to join before finishing.
+    
+b. We implemented this in dealer's run method only. Even when calling dealer.terminate, the process would go through the end
+    of dealer's run method.
+    
+c. We printed statements to the terminal in order to check that all threads were terminated and in the desired order.
 
 --------------------
 
@@ -29,7 +45,16 @@ config.turnTimeoutMillis < 0: display nothing.
 config.turnTimeoutMillis = 0: display a timer since the last action (reshuffle or set collected).
 Note: in modes without a countdown timer the dealer must ensure there is always at least one legal set on the table.
 
-We are not entitled to this bonus.
+a. In each method mentioned below, we took these cases into consideration and changed the reshuffleTime variable and timerdisplay
+    according to the instructions, so the desired countdown timer will be displayed. If there is no countdown timer, we made
+    sure that the dealer ensures there is always at least one legal set on the table.
+
+b. In "timerLoop", "removeCardsFromTable", "sleepUntilWokenOrTimeout", "updateTimerDisplay", methods in "Dealer"
+    class 
+    
+c. We changed the "TurnTimeoutSeconds" field in config file and checked that the game is displayed correctly
+    as expected in each case. we also make sure that the dealer changes the all cards if there is no set on
+    the table, if config.turnTimeoutMillis <= 0.
 
 --------------------
 
@@ -37,4 +62,21 @@ We are not entitled to this bonus.
 changed on the display, key input needs to be handled, etc.) and the only threads created by you are:
 1 thread per player + 1 additional thread for non-human players.
 
-We are not entitled to this bonus.
+a. aiThread: We used a blocking Queue called inActions that puts the thread in wait when the queue is full. The thread wakes
+    up when the playerThread removes an element from the queue or when the queue is cleared.
+    playerThread: In our implementation, only during timerLoop the players can put tokens on the table, otherwise they
+    wait until the dealer wakes them. Moreover, when a player is waiting for a response from the dealer regarding point/penalty, 
+    the player is also blocked until the dealer wakes them.
+    dealerThread: During the timerLoop, when there is no set to check and the timer display doesn't need to be updated, the dealer
+    is put to sleep until one of the consitions is met (in case there isn't a timer to update, wait until there's a set to check).
+
+b. aiThread: Implemented in class actionsQueue.
+    playerThread: At the begginning of player's run method's loop, we call "table.getCanPlaceTokens" where the player waits until
+    the dealer allows tokens to be placed. When the player waits for answer from the dealer, we use a designated array of locks kept
+    in dealer's fields, the wait is called in player's run.
+    dealerThread: Implemented in class dealer at method "sleepUntilWokenOrTimeout".
+    
+c. aiThread: we used printing to the terminal when it started/ended waiting.
+    playerThread: When running non-human players we made sure that no tokens were placed when they shouldn't have. We used 
+    printing to make sure it waits while waiting for an answer from the dealer.
+    dealerThread: We used printing every time we entered sleep or caught an exception.
